@@ -1,3 +1,4 @@
+
 part of 'create_update_bloc.dart';
 
 @freezed
