@@ -15,62 +15,55 @@ class CreateUpdateFormBloc
     //* Initialize form data
     on<_Init>((event, emit) {
       emit(CreateUpdateHikeFormState(
-        routerName: event.routerName,
-        destinationName: event.destinationName,
-        coordinateDestination: event.coordinateDestination,
-        placeOfOriginName: event.placeOfOriginName,
-        coordinatePlaceOfOrigin: event.coordinatePlaceOfOrigin,
-        startDate: event.startDate,
-        isParkingRouter: event.isParkingRouter ?? false,
-        totalDuration: event.totalDuration,
-        levelDifficultRouter: event.levelDifficultRouter ?? 1,
-        description: event.description,
-        images: event.images,
-      ));
+          nameHike: event.nameHike,
+          locationHike: event.locationHike,
+          startDate: event.startDate,
+          isParking: event.isParking ?? false,
+          distanceHike: event.distanceHike,
+          levelDifficult: event.levelDifficult ?? 1,
+          description: event.description,
+          estimateCompleteTime: event.estimateCompleteTime,
+          imagesPath: event.imagesPath,
+          startLocation: event.startLocation));
     });
 
     //* Update fields data with current data
     on<CreateUpdateHikeFormEvent>((event, emit) {
       if (event is _NameChanged) {
-        emit(state.copyWith(routerName: event.value));
+        emit(state.copyWith(nameHike: event.value));
       }
-      if (event is _DestinationChanged) {
-        emit(state.copyWith(destinationName: event.value));
+      if (event is _LocationChanged) {
+        emit(state.copyWith(locationHike: event.value));
+
       }
       if (event is _StartDateChanged) {
         emit(state.copyWith(startDate: event.value));
       }
-      if (event is _CoordinateDestinationChanged) {
-        emit(state.copyWith(coordinateDestination: event.value));
+      if (event is _IsParkingChanged) {
+        emit(state.copyWith(isParking: event.value));
       }
-      if (event is _PlaceOfOriginNameChanged) {
-        emit(state.copyWith(placeOfOriginName: event.value));
+      if (event is _DistanceHikeChanged) {
+        emit(state.copyWith(distanceHike: event.value));
       }
-      if (event is _CoordinatePlaceOfOriginChanged) {
-        emit(state.copyWith(coordinatePlaceOfOrigin: event.value));
+      if (event is _LevelDifficultChanged) {
+        emit(state.copyWith(levelDifficult: event.value));
       }
-      if (event is _IsParkingRouterChanged) {
-        emit(state.copyWith(isParkingRouter: event.value));
+      if (event is _ImagesPathChanged) {
+        emit(state.copyWith(imagesPath: event.value));
       }
-      if (event is _TotalDurationChanged) {
-        emit(state.copyWith(totalDuration: event.value));
-      }
-      if (event is _LevelDifficultRouterChanged) {
-        emit(state.copyWith(levelDifficultRouter: event.value));
-      }
-      if (event is _DescriptionChanged) {
-        emit(state.copyWith(description: event.value));
-      }
-      if (event is _ImagesChanged) {
-        emit(state.copyWith(images: event.value));
+      if (event is _StartLocationChanged) {
+        emit(state.copyWith(startLocation: event.value));
       }
     });
 
     //* Create new or update hike to local storage
 
     on<_CreateOrUpdateHike>((event, emit) {
-      if (event.id == null) {
-      } else {}
+      if(event.id == null){
+
+      }else{
+        
+      }
     });
   }
 }

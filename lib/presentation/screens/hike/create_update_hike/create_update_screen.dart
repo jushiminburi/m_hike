@@ -38,80 +38,116 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: _boxBottomNavigationBar(),
-      appBar: AppBar(),
       backgroundColor: Colors.white,
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Gap(30),
-            Text(
-              AppString.create_a_hike,
-              style: AppTypography.headline1.copyWith(fontSize: 40),
-            ),
-            const Gap(30),
-            _componentViewField(AppString.name_hike,
-                placeholder: AppString.enter_name_of_hike,
-                controller: nameTextEditController,
-                focusNode: nameFocusNode),
-            const Gap(15),
-            _componentViewField(AppString.location_hike,
-                controller: locationTextEditController,
-                placeholder: AppString.enter_location_of_hike,
-                focusNode: locationFocusNode),
-            const Gap(15),
-            Container(
-                margin: const EdgeInsets.only(right: 40),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(AppString.startDate_hike,
-                          style: AppTypography.title),
-                      const Gap(5),
-                      TextField(
-                          controller: startDateTextEditController,
-                          focusNode: AlwaysDisabledFocusNode(),
-                          decoration: InputDecoration(
-                            hintText: AppString.choose_date_start_hike,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    const BorderSide(color: AppColor.grayI)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    const BorderSide(color: AppColor.blueI)),
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    const BorderSide(color: AppColor.redI)),
-                          ),
-                          onTap: () async => await _selectDate(context)),
-                      const Gap(15),
-                      _checkBoxParkingView(),
-                    ])),
-            const Gap(15),
-            Row(children: [
-              const Text(AppString.distance_hike, style: AppTypography.title),
+          child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Gap(30),
+              Text(
+                AppString.create_a_hike,
+                style: AppTypography.title
+                    .copyWith(fontSize: 40, fontWeight: FontWeight.w700),
+              ),
+              const Gap(30),
+              _componentViewField(AppString.name_hike,
+                  placeholder: AppString.enter_name_of_hike,
+                  suffix: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: SvgPicture.asset(
+                          // color: AppColor.grayIII,
+                          height: 20,
+                          width: 20,
+                          AppImage.name,
+                          fit: BoxFit.cover)),
+                  controller: nameTextEditController,
+                  focusNode: nameFocusNode),
+              const Gap(25),
+              _componentViewField(AppString.location_hike,
+                  controller: locationTextEditController,
+                  suffix: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: SvgPicture.asset(
+                          height: 20,
+                          width: 20,
+                          AppImage.location,
+                          fit: BoxFit.cover)),
+                  placeholder: AppString.enter_location_of_hike,
+                  focusNode: locationFocusNode),
+              const Gap(25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                      width: 200,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(AppString.startDate_hike,
+                                style: AppTypography.title.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w600)),
+                            const Gap(10),
+                            TextField(
+                                controller: startDateTextEditController,
+                                focusNode: AlwaysDisabledFocusNode(),
+                                decoration: InputDecoration(
+                                    hintText: AppString.choose_date_start_hike,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: const BorderSide(
+                                            color: AppColor.grayI)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: const BorderSide(
+                                            color: AppColor.blueI)),
+                                    errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: const BorderSide(
+                                            color: AppColor.redI))),
+                                onTap: () async => await _selectDate(context)),
+                            const Gap(25),
+                            _checkBoxParkingView(),
+                          ])),
+                  Container(
+                      margin: const EdgeInsets.only(right: 40),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(AppString.distance_hike,
+                                style: AppTypography.title.copyWith(
+                                    fontSize: 16, fontWeight: FontWeight.w600)),
+                            const Gap(10),
+                            SizedBox(
+                                width: 150,
+                                child: TextFieldView(
+                                    suffix: const Padding(
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: Text(
+                                          '.km',
+                                          style: TextStyle(
+                                              color: AppColor.grayIII),
+                                        )),
+                                    keyboardType: TextInputType.number,
+                                    controller: distanceTextEditController,
+                                    focusNode: distanceFocusNode,
+                                    onChanged: (value) {},
+                                    onSubmitted: (value) {}))
+                          ])),
+                ],
+              ),
               const Gap(15),
-              SizedBox(
-                  width: 70,
-                  child: TextFieldView(
-                      keyboardType: TextInputType.number,
-                      controller: distanceTextEditController,
-                      focusNode: distanceFocusNode,
-                      onChanged: (value) {},
-                      onSubmitted: (value) {}))
+              _buttonLevelDifficult(),
+              const Gap(15),
+              _completerTimeView()
             ]),
-            const Gap(15),
-            _buttonLevelDifficult(),
-            const Gap(15),
-            _completerTimeView()
-          ]),
+          ),
         ),
       )),
     );
@@ -182,15 +218,20 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
   Widget _componentViewField(String title,
       {required TextEditingController controller,
       required FocusNode focusNode,
+      Widget? suffix,
+
       String? placeholder,
       Function(String)? onChanged,
       Function(String)? onSubmitted}) {
     return Container(
       margin: const EdgeInsets.only(right: 40),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: AppTypography.title),
-        const Gap(5),
+        Text(title,
+            style: AppTypography.title
+                .copyWith(fontSize: 16, fontWeight: FontWeight.w600)),
+        const Gap(10),
         TextFieldView(
+            suffix: suffix,
             placeholder: placeholder,
             controller: controller,
             focusNode: focusNode,
@@ -204,14 +245,21 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(AppString.level_of_difficult, style: AppTypography.title),
-        const Gap(5),
+        Text(
+          AppString.level_of_difficult,
+          style: AppTypography.title.copyWith(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const Gap(10),
         CustomSlidingSegmentedControl<int>(
           fixedWidth: 100,
           initialValue: 2,
           thumbDecoration: BoxDecoration(
             color: AppColor.blueIII,
-            borderRadius: BorderRadius.circular(10),
+
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(.1),
@@ -223,23 +271,30 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
           ),
           decoration: BoxDecoration(
             color: AppColor.blueII,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(20),
           ),
-          children: const {
+          children: {
             1: Text(
               AppString.easy,
-              style: AppTypography.title,
-              textAlign: TextAlign.center,
+              style: AppTypography.title.copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
+              textAlign: TextAlign.justify,
             ),
             2: Text(
               AppString.normal,
-              style: AppTypography.title,
-              textAlign: TextAlign.center,
+              style: AppTypography.title.copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
             ),
             3: Text(
               AppString.difficult,
-              style: AppTypography.title,
-              textAlign: TextAlign.center,
+              style: AppTypography.title.copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white),
             ),
           },
           onValueChanged: (int value) {
