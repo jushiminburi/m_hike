@@ -28,6 +28,7 @@ dependencies:
   google_maps_flutter: ^2.5.0
   geolocator: ^10.1.0
   location: any
+  image_picker: ^1.0.4
 
 dev_dependencies:
   freezed: any
