@@ -11,7 +11,6 @@ part 'hike.freezed.dart';
 class Hike with _$Hike {
   const factory Hike(
       {@Default(Isar.autoIncrement) int isarId,
-        String id,
       @Default('') String routerName,
       @Default('') String destinationName,
       @Default(0.0) double coordinateDestination,
