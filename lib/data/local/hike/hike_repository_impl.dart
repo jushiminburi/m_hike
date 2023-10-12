@@ -1,5 +1,6 @@
 part of 'hike_repository.dart';
 
+@LazySingleton(as:HikeRepository )
 class HikeRepositoryImpl implements HikeRepository {
   Database db;
   HikeRepositoryImpl(this.db);
@@ -15,7 +16,7 @@ class HikeRepositoryImpl implements HikeRepository {
       if (cached == null) {
         await db.getDatabase().hikes.put(hike);
       } else {
-        await db.getDatabase().hikes.put(hike.copyWith(id: hike.id));
+        await db.getDatabase().hikes.put(hike.copyWith(isarId: hike.isarId));
       }
     });
   }

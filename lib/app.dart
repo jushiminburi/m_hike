@@ -3,8 +3,8 @@ import 'package:m_hike/common/constants.dart/app_string.dart';
 import 'package:m_hike/di/di.dart';
 import 'package:m_hike/presentation/routes/app_router.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+class Application extends StatelessWidget {
+  const Application({super.key});
   AppRouter get _autoRouter => getIt<AppRouter>();
   @override
   Widget build(BuildContext context) {

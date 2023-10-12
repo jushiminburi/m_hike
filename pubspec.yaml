@@ -24,6 +24,10 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_svg: ^2.0.7
   custom_sliding_segmented_control: ^1.7.5
+  dartz: ^0.10.1
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  location: any
 
 dev_dependencies:
   freezed: any

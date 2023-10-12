@@ -6,7 +6,6 @@ import 'package:m_hike/domain/models/hike.dart';
 import 'package:dartz/dartz.dart';
 part 'hike_repository_impl.dart';
 
-@injectable
 abstract class HikeRepository {
   Future cacheHikeToLocal(Hike hike);
   Future<Either<AppError, Hike>> fetchCacheHike(int id);
