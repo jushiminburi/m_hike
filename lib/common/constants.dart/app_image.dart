@@ -10,8 +10,9 @@ mixin AppImage {
   static const String test = 'assets/image/test.jpg';
   static const String distance = 'assets/icon/distance.svg';
   static const String time = 'assets/icon/time.svg';
+  static const String parking = 'assets/icon/parking.svg';
+    static const String create_hike = 'assets/icon/create_hike.svg';
 
   // *images
   static const String default_image = 'assets/images/default.jpg';
-
 }

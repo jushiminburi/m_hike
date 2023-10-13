@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:m_hike/common/constants.dart/app_typography.dart';
 
@@ -9,7 +10,7 @@ class AppBarHomeView extends StatefulWidget implements PreferredSizeWidget {
   State<AppBarHomeView> createState() => _AppBarHomeViewState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(55);
+  Size get preferredSize => Size.fromHeight(0.12.sh);
 }
 
 class _AppBarHomeViewState extends State<AppBarHomeView> {
@@ -17,12 +18,12 @@ class _AppBarHomeViewState extends State<AppBarHomeView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10),
+            padding: EdgeInsets.only(left: 10.w, top: 10.h),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               const CircleAvatar(
                 backgroundColor: Colors.amberAccent,
               ),
-              const Gap(10),
+              Gap(10.w),
               Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +32,7 @@ class _AppBarHomeViewState extends State<AppBarHomeView> {
                       'Good Morning',
                       style: AppTypography.headline2,
                     ),
-                    const Text(
+                    Text(
                       '28 °C',
                       style: AppTypography.title,
                     ),

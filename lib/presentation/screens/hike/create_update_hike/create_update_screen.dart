@@ -162,7 +162,7 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(AppString.parking_available, style: AppTypography.title),
+        Text(AppString.parking_available, style: AppTypography.title),
         const Gap(10),
         _checkBoxView(false, AppString.available),
         const Gap(10),
@@ -256,44 +256,36 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
           fixedWidth: 100,
           initialValue: 2,
           thumbDecoration: BoxDecoration(
-            color: AppColor.blueIII,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.1),
-                blurRadius: 3.0,
-                spreadRadius: 2.0,
-                offset: const Offset(0.0, 1.0),
-              ),
-            ],
-          ),
+              color: AppColor.blueIII,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(.1),
+                    blurRadius: 3.0,
+                    spreadRadius: 2.0,
+                    offset: const Offset(0.0, 1.0))
+              ]),
           decoration: BoxDecoration(
             color: AppColor.blueII,
             borderRadius: BorderRadius.circular(20),
           ),
           children: {
-            1: Text(
-              AppString.easy,
-              style: AppTypography.title.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
-              textAlign: TextAlign.justify,
-            ),
-            2: Text(
-              AppString.normal,
-              style: AppTypography.title.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
-            ),
-            3: Text(
-              AppString.difficult,
-              style: AppTypography.title.copyWith(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white),
-            ),
+            1: Text(AppString.easy,
+                style: AppTypography.title.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+                textAlign: TextAlign.justify),
+            2: Text(AppString.normal,
+                style: AppTypography.title.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white)),
+            3: Text(AppString.difficult,
+                style: AppTypography.title.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white)),
           },
           onValueChanged: (int value) {
             print(value);

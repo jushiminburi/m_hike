@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:m_hike/presentation/screens/hike/detail/detail_hike_screen.dart';
 import 'package:m_hike/presentation/screens/hiking/hiking_screen.dart';
 
 import '../screens/hike/create_update_hike/create_update_screen.dart';
@@ -13,6 +15,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HomeRoutes.page, initial: true),
         AutoRoute(page: CreateUpdateHikeRoute.page),
         AutoRoute(page: HikingRoute.page),
-        AutoRoute(page: HikeDetailRoute.page, initial: true),
+        AutoRoute(page: HikeDetailRoute.page),
       ];
 }
