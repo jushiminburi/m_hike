@@ -145,7 +145,7 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
               const Gap(15),
               _buttonLevelDifficult(),
               const Gap(15),
-              _completerTimeView()
+              _imageHike()
             ]),
           ),
         ),
@@ -219,7 +219,6 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
       {required TextEditingController controller,
       required FocusNode focusNode,
       Widget? suffix,
-
       String? placeholder,
       Function(String)? onChanged,
       Function(String)? onSubmitted}) {
@@ -258,7 +257,6 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
           initialValue: 2,
           thumbDecoration: BoxDecoration(
             color: AppColor.blueIII,
-
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -336,6 +334,15 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
                           .copyWith(fontSize: 15, color: Colors.white))),
             ])
           ]));
+
+  Widget _imageHike() {
+    return Container(
+      width: 200,
+      height: 50,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: AppColor.blueIII),
+    );
+  }
 }
 
 class AlwaysDisabledFocusNode extends FocusNode {
