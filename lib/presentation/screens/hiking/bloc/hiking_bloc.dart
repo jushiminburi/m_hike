@@ -18,7 +18,7 @@ class HikingBloc extends Bloc<HikingEvent, HikingState> {
   void _initialRouter(_Initial event, Emitter<HikingState> emit) {
     final Hike hike = event.hike;
     emit(HikingState(
-      destinationLocation: LatLng(hike.lattitudeDestination, longitude),
-    ));
+        destinationLocation:
+            LatLng(hike.lattitudeDestination, hike.longtitudeDestination)));
   }
 }
