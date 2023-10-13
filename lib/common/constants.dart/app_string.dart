@@ -21,4 +21,6 @@ mixin AppString {
   static const String enter_name_of_hike = 'Enter name of the hike...';
   static const String enter_location_of_hike = 'Enter location of the hike...';
   static const String choose_date_start_hike = 'Choose date...';
+
+
 }

@@ -12,6 +12,7 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: HomeRoutes.page),
         AutoRoute(page: CreateUpdateHikeRoute.page),
-        AutoRoute(page: HikingRoute.page, initial: true),
+        AutoRoute(page: HikingRoute.page),
+        AutoRoute(page: HikeDetailRoute.page, initial: true),
       ];
 }
