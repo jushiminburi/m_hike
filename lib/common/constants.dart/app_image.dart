@@ -5,9 +5,13 @@ mixin AppImage {
   static const String tick_icon = 'assets/icon/tick.svg';
   static const String location = 'assets/icon/location.svg';
   static const String name = 'assets/icon/name.svg';
+  static const String search = 'assets/icon/search.svg';
   static const String camera = 'assets/icon/camera.png';
-
-  //* image
-  static const String default_cover = 'assets/image/default.jpg';
   static const String test = 'assets/image/test.jpg';
+  static const String distance = 'assets/icon/distance.svg';
+  static const String time = 'assets/icon/time.svg';
+
+  // *images
+  static const String default_image = 'assets/images/default.jpg';
+
 }

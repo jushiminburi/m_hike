@@ -30,6 +30,7 @@ dependencies:
   location: any
   image_picker: ^1.0.4
   flutter_screenutil: ^5.9.0
+  flutter_custom_tab_bar: ^1.2.1
 
 dev_dependencies:
   freezed: any
@@ -47,6 +48,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/image/
+
     
 
   fonts:

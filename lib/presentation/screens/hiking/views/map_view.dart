@@ -23,10 +23,8 @@ class _MapViewState extends State<MapView> {
   Widget build(BuildContext context) {
     return GoogleMap(
         mapType: MapType.hybrid,
-        initialCameraPosition: const CameraPosition(
-          target: _pGooglePlex,
-          zoom: 13,
-        ),
+        initialCameraPosition:
+            const CameraPosition(target: _pGooglePlex, zoom: 13),
         onMapCreated: _mapController.complete);
   }
 }
