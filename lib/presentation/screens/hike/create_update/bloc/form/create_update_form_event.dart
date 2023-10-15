@@ -6,7 +6,7 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
     String? nameHike,
     String? locationHike,
     DateTime? startDate,
-    bool? isParking,
+   @Default(false) bool isParking,
     double? distanceHike,
     int? levelDifficult,
     String? description,
@@ -17,7 +17,7 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
 const  factory CreateUpdateHikeFormEvent.nameChanged(String value) = _NameChanged;
 const  factory CreateUpdateHikeFormEvent.locationChanged(String value) = _LocationChanged;
 const  factory CreateUpdateHikeFormEvent.startDateChanged(DateTime value) = _StartDateChanged;
- const factory CreateUpdateHikeFormEvent.isParkingChanged(bool value) = _IsParkingChanged;
+ const factory CreateUpdateHikeFormEvent.isParkingChanged(int value) = _IsParkingChanged;
 const  factory CreateUpdateHikeFormEvent.distanceHikeChanged(double value) = _DistanceHikeChanged;
  const factory CreateUpdateHikeFormEvent.levelDifficultChanged(int value) = _LevelDifficultChanged;
  const factory CreateUpdateHikeFormEvent.descriptionChanged(String value) = _DescriptionChanged;

@@ -11,7 +11,9 @@ mixin AppImage {
   static const String distance = 'assets/icon/distance.svg';
   static const String time = 'assets/icon/time.svg';
   static const String parking = 'assets/icon/parking.svg';
-    static const String create_hike = 'assets/icon/create_hike.svg';
+  static const String create_hike = 'assets/icon/create_hike.svg';
+  static const String left_arrow = 'assets/icon/left_arrow.svg';
+  static const String difficulty = 'assets/icon/difficulty.svg';
 
   // *images
   static const String default_image = 'assets/images/default.jpg';

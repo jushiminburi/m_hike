@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:m_hike/common/constants.dart/constants.dart';
+import 'package:m_hike/domain/models/hike.dart';
 import 'package:m_hike/presentation/routes/app_router.dart';
 import 'package:m_hike/presentation/screens/home/views/app_bar.dart';
 import 'package:m_hike/presentation/views/textfield_view.dart';
@@ -83,7 +84,7 @@ class _HomeScreensState extends State<HomeScreens> {
                             physics: const ClampingScrollPhysics(),
                             itemBuilder: (_, index) => GestureDetector(
                                 onTap: () => context.router
-                                    .push(HikeDetailRoute(idHike: 1)),
+                                    .push(HikeDetailRoute(hike: Hike())),
                                 child: _itemHikeView()),
                             separatorBuilder:
                                 (BuildContext context, int index) => Gap(10.h),
@@ -91,7 +92,8 @@ class _HomeScreensState extends State<HomeScreens> {
                           )))
             ])),
         floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => context.router.push(const CreateUpdateHikeRoute()),
+            backgroundColor: AppColor.blueIII,
+            onPressed: () => context.router.push(CreateUpdateHikeRoute()),
             label: Row(children: [
               SvgPicture.asset(AppImage.create_hike, height: 25.h, width: 25.h),
               Gap(5.w),

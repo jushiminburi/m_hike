@@ -1,6 +1,6 @@
 part of 'hike_repository.dart';
 
-@LazySingleton(as:HikeRepository )
+@LazySingleton(as: HikeRepository)
 class HikeRepositoryImpl implements HikeRepository {
   Database db;
   HikeRepositoryImpl(this.db);
@@ -40,6 +40,22 @@ class HikeRepositoryImpl implements HikeRepository {
       return right(isDeleted);
     } else {
       return left(AppError(message: 'Delete hike failed'));
+    }
+  }
+
+  @override
+  Future<Either<AppError, List<Hike>>> fectchListHike(String keywords) async {
+    final result = await db
+        .getDatabase()
+        .hikes
+        .filter()
+        .routerNameContains(keywords, caseSensitive: false)
+        .destinationNameContains(keywords, caseSensitive: false)
+        .findAll();
+    if (result.isEmpty) {
+      return left(AppError(message: 'Hike not found'));
+    } else {
+      return right(result);
     }
   }
 }

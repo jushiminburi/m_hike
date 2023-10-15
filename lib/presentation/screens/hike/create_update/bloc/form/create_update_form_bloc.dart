@@ -18,7 +18,7 @@ class CreateUpdateFormBloc
           nameHike: event.nameHike,
           locationHike: event.locationHike,
           startDate: event.startDate,
-          isParking: event.isParking ?? false,
+          isParking: event.isParking,
           distanceHike: event.distanceHike,
           levelDifficult: event.levelDifficult ?? 1,
           description: event.description,
@@ -34,13 +34,12 @@ class CreateUpdateFormBloc
       }
       if (event is _LocationChanged) {
         emit(state.copyWith(locationHike: event.value));
-
       }
       if (event is _StartDateChanged) {
         emit(state.copyWith(startDate: event.value));
       }
       if (event is _IsParkingChanged) {
-        emit(state.copyWith(isParking: event.value));
+        emit(state.copyWith(isParking: event.value == 1));
       }
       if (event is _DistanceHikeChanged) {
         emit(state.copyWith(distanceHike: event.value));
@@ -54,16 +53,16 @@ class CreateUpdateFormBloc
       if (event is _StartLocationChanged) {
         emit(state.copyWith(startLocation: event.value));
       }
+      if (event is _DescriptionChanged) {
+        emit(state.copyWith(description: event.value));
+      }
     });
 
     //* Create new or update hike to local storage
 
     on<_CreateOrUpdateHike>((event, emit) {
-      if(event.id == null){
-
-      }else{
-        
-      }
+      if (event.id == null) {
+      } else {}
     });
   }
 }

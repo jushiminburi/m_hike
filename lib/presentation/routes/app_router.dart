@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:m_hike/domain/models/hike.dart';
 import 'package:m_hike/presentation/screens/hike/detail/detail_hike_screen.dart';
 import 'package:m_hike/presentation/screens/hiking/hiking_screen.dart';
 
