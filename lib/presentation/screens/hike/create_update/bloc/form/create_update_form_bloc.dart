@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:m_hike/common/extension/string.dart';
@@ -15,20 +18,20 @@ class CreateUpdateFormBloc
     //* Initialize form data
     on<_Init>((event, emit) {
       emit(CreateUpdateHikeFormState(
-          nameHike: event.nameHike,
-          locationHike: event.locationHike,
+          nameHike: event.nameHike ?? '',
+          locationHike: event.locationHike ?? '',
           startDate: event.startDate,
           isParking: event.isParking,
-          distanceHike: event.distanceHike,
+          distanceHike: event.distanceHike ?? 0,
           levelDifficult: event.levelDifficult ?? 1,
-          description: event.description,
-          estimateCompleteTime: event.estimateCompleteTime,
-          imagesPath: event.imagesPath,
-          startLocation: event.startLocation));
+          description: event.description ?? '',
+          estimateCompleteTime: event.estimateCompleteTime ?? 0,
+          imagesPath: event.imagesPath ?? <List<int>>[],
+          startLocation: event.startLocation ?? ''));
     });
 
     //* Update fields data with current data
-    on<CreateUpdateHikeFormEvent>((event, emit) {
+    on<CreateUpdateHikeFormEvent>((event, emit) async {
       if (event is _NameChanged) {
         emit(state.copyWith(nameHike: event.value));
       }
@@ -48,13 +51,37 @@ class CreateUpdateFormBloc
         emit(state.copyWith(levelDifficult: event.value));
       }
       if (event is _ImagesPathChanged) {
-        emit(state.copyWith(imagesPath: event.value));
+        final ImagePicker picker = ImagePicker();
+        if (event.isCamera) {
+          XFile? image = await picker.pickImage(source: ImageSource.camera);
+          if (image == null) {
+            return;
+          }
+          final Uint8List imagesPath = await image.readAsBytes();
+          List<List<int>> imageCopyWith = [];
+          imageCopyWith.add(imagesPath.toList());
+          emit(state
+              .copyWith(imagesPath: [...state.imagesPath, ...imageCopyWith]));
+        } else {
+          List<XFile> images = await picker.pickMultiImage();
+          List<List<int>> imagesFormat = [];
+          for (final image in images) {
+            final listIneImage = await image.readAsBytes();
+            imagesFormat.add(listIneImage.toList());
+          }
+          emit(state
+              .copyWith(imagesPath: [...state.imagesPath, ...imagesFormat]));
+        }
       }
       if (event is _StartLocationChanged) {
         emit(state.copyWith(startLocation: event.value));
       }
       if (event is _DescriptionChanged) {
         emit(state.copyWith(description: event.value));
+      }
+      if (event is _RemoveImage) {
+        state.imagesPath.removeAt(event.index);
+        emit(state.copyWith(imagesPath: state.imagesPath));
       }
     });
 

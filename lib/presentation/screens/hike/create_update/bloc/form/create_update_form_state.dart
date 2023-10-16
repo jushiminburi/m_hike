@@ -4,16 +4,16 @@ part of 'create_update_form_bloc.dart';
 class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
   const CreateUpdateHikeFormState._();
   factory CreateUpdateHikeFormState({
-    String? nameHike,
-    String? locationHike,
-    DateTime? startDate,
+  @Default('')  String nameHike,
+  @Default('')  String locationHike,
+   DateTime? startDate,
     @Default(false) bool isParking,
-    double? distanceHike,
+  @Default(0)  double distanceHike,
     @Default(1) int levelDifficult,
-    String? description,
-    int? estimateCompleteTime,
-    List<String>? imagesPath,
-    String? startLocation,
+  @Default('')  String description,
+  @Default(0)  int estimateCompleteTime,
+   @Default([]) List<List<int>> imagesPath,
+   @Default('') String startLocation,
   }) = _CreateUpdateHikeFormState;
 
   bool get isEmptyName => nameHike.isEmptyStr;
