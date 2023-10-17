@@ -42,20 +42,26 @@ class HikeRepositoryImpl implements HikeRepository {
       return left(AppError(message: 'Delete hike failed'));
     }
   }
-
+  
   @override
-  Future<Either<AppError, List<Hike>>> fectchListHike(String keywords) async {
-    final result = await db
-        .getDatabase()
-        .hikes
-        .filter()
-        .routerNameContains(keywords, caseSensitive: false)
-        .destinationNameContains(keywords, caseSensitive: false)
-        .findAll();
-    if (result.isEmpty) {
-      return left(AppError(message: 'Hike not found'));
-    } else {
-      return right(result);
-    }
+  Future<Either<AppError, List<Hike>>> fectchListHike(String keywords) {
+    // TODO: implement fectchListHike
+    throw UnimplementedError();
   }
+
+  // @override
+  // Future<Either<AppError, List<Hike>>> fectchListHike(String keywords) async {
+  //   // final result = await db
+  //   //     .getDatabase()
+  //   //     .hikes
+  //   //     .filter()
+  //   //     .routerNameContains(keywords, caseSensitive: false)
+  //   //     .destinationNameContains(keywords, caseSensitive: false)
+  //   //     .findAll();
+  //   // if (result.isEmpty) {
+  //   //   return left(AppError(message: 'Hike not found'));
+  //   // } else {
+  //   //   return right(result);
+  //   // }
+  // }
 }

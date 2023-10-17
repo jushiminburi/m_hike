@@ -6,12 +6,12 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
     String? nameHike,
     String? locationHike,
     DateTime? startDate,
-    @Default(false) bool isParking,
+    @Default(false) bool? isParking,
     double? distanceHike,
     int? levelDifficult,
     String? description,
     int? estimateCompleteTime,
-    List<List<int>>? imagesPath,
+    List<ImageLocal>? imagesPath,
     String? startLocation,
   }) = _Init;
   const factory CreateUpdateHikeFormEvent.nameChanged(String value) =
@@ -36,6 +36,5 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
       _StartLocationChanged;
   const factory CreateUpdateHikeFormEvent.createOrUpdateHike({Id? id}) =
       _CreateOrUpdateHike;
-       const factory CreateUpdateHikeFormEvent.removeImage(int index) =
-      _RemoveImage;
+  const factory CreateUpdateHikeFormEvent.removeImage(int index) = _RemoveImage;
 }

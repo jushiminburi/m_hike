@@ -4,12 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class Util {
-  static const String dateFormat = 'dd/MM/yyyy'; // Định dạng ngày tháng
-  static const String timeFormat = 'HH:mm'; // Định dạng giờ
+  static const String dateFormat = 'dd/MM/yyyy';
+  static const String timeFormat = 'HH:mm';
 
-  // Hàm để định dạng DateTime thành chuỗi ngày tháng
-  static String formatDateTime(DateTime dateTime) {
-    return DateFormat(dateFormat).format(dateTime);
+  static String formatDateTime(DateTime? dateTime) {
+    return dateTime != null ? DateFormat(dateFormat).format(dateTime) : '';
   }
 
   // Hàm để định dạng DateTime thành chuỗi giờ
@@ -36,7 +35,7 @@ class Util {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 5,
-        backgroundColor: Colors.orangeAccent,
+        backgroundColor: Colors.redAccent,
         textColor: Colors.white,
         fontSize: 12.sp);
   }

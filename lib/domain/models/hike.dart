@@ -7,10 +7,9 @@ import 'package:m_hike/domain/models/observation_hike.dart';
 part 'hike.g.dart';
 part 'hike.freezed.dart';
 
+
 @freezed
-@Collection(
-  ignore: {'copyWith'},
-)
+@Collection(ignore: {'copyWith'},)
 class Hike with _$Hike {
   const factory Hike({
     @Default(Isar.autoIncrement) int isarId,
@@ -25,7 +24,7 @@ class Hike with _$Hike {
     @Default(1) int levelDifficultRouter,
     @Default(0.0) double totalDuration, // unit: Miles
     @Default('') String description,
-    @Default([]) List<Image>? images,
+    @Default([]) List<ImageLocal>? images,
     @Default([]) List<Observation> observationPoints,
     @Default(false) bool completed,
     DateTime? created,
@@ -33,23 +32,4 @@ class Hike with _$Hike {
   }) = _Hike;
   @override
   Id get isarId;
-}
-
-class Uint8ListConverter implements JsonConverter<Uint8List?, List<int>?> {
-  /// Create a new instance of [Uint8ListConverter].
-  const Uint8ListConverter();
-
-  @override
-  Uint8List? fromJson(List<int>? json) {
-    if (json == null) return null;
-
-    return Uint8List.fromList(json);
-  }
-
-  @override
-  List<int>? toJson(Uint8List? object) {
-    if (object == null) return null;
-
-    return object.toList();
-  }
 }

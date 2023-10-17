@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:typed_data';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,14 +44,16 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
               width: double.infinity,
               height: double.infinity,
               child: Stack(children: [
-                hike.images!.isEmpty
+                hike.images == null || hike.images!.isEmpty
                     ? Image.asset(
                         AppImage.default_image,
                         height: 0.43.sh,
                         width: double.infinity,
                         fit: BoxFit.fill,
                       )
-                    : const SizedBox.shrink(),
+                    : Image.memory(
+                        Uint8List.fromList(hike.images?[0].image ?? []),
+                        fit: BoxFit.fill),
                 Positioned(
                     bottom: 0,
                     child: Container(
@@ -61,101 +65,126 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                             color: Colors.white,
                             borderRadius: BorderRadiusDirectional.vertical(
                                 top: Radius.circular(30.r))),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(hike.routerName!,
-                                  style: AppTypography.headline1.copyWith(
-                                      fontSize: 28.sp,
-                                      fontWeight: FontWeight.w700)),
-                              Gap(20.h),
-                              Row(
-                                children: [
-                                  Row(children: [
-                                    Container(
-                                      padding: EdgeInsetsDirectional.symmetric(
-                                          horizontal: 7.w, vertical: 7.w),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(20.r),
-                                          border:
-                                              Border.all(color: Colors.white),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: AppColor.grayI,
-                                                blurRadius: 3.r,
-                                                offset: const Offset(3, 3),
-                                                blurStyle: BlurStyle.normal)
-                                          ]),
-                                      height: 40.h,
-                                      width: 40.h,
-                                      child: SvgPicture.asset(
-                                        AppImage.location,
-                                        height: 10.h,
-                                        color: AppColor.blueIII,
-                                        fit: BoxFit.contain,
+                        child: SingleChildScrollView(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(hike.routerName,
+                                    style: AppTypography.headline1.copyWith(
+                                        fontSize: 28.sp,
+                                        fontWeight: FontWeight.w700)),
+                                Gap(20.h),
+                                Row(
+                                  children: [
+                                    Row(children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsetsDirectional.symmetric(
+                                                horizontal: 7.w, vertical: 7.w),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20.r),
+                                            border:
+                                                Border.all(color: Colors.white),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: AppColor.grayI,
+                                                  blurRadius: 3.r,
+                                                  offset: const Offset(3, 3),
+                                                  blurStyle: BlurStyle.normal)
+                                            ]),
+                                        height: 40.h,
+                                        width: 40.h,
+                                        child: SvgPicture.asset(
+                                          AppImage.location,
+                                          height: 10.h,
+                                          color: AppColor.blueIII,
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
-                                    ),
-                                    Gap(10.w),
-                                    Text(
-                                      hike.totalDuration.toString(),
-                                      style: AppTypography.title
-                                          .copyWith(color: AppColor.blueIII),
+                                      Gap(10.w),
+                                      Text(
+                                        '${hike.totalDuration.toString()} KM',
+                                        style: AppTypography.title
+                                            .copyWith(color: AppColor.blueIII),
+                                      )
+                                    ]),
+                                    Gap(30.w),
+                                    Expanded(
+                                      child: EllipsisText(
+                                        hike.destinationName,
+                                        maxLines: 3,
+                                        style: AppTypography.headline2.copyWith(
+                                            fontWeight: FontWeight.w600),
+                                      ),
                                     )
-                                  ]),
-                                  Gap(30.w),
-                                  Expanded(
-                                    child: EllipsisText(
-                                      hike.destinationName!,
-                                      maxLines: 3,
-                                      style: AppTypography.headline2.copyWith(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Gap(20.h),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10.w),
-                                child: SizedBox(
-                                    height: 150.h,
-                                    child: const GoogleMap(
-                                        myLocationButtonEnabled: false,
-                                        initialCameraPosition: CameraPosition(
-                                            target:
-                                                LatLng(15.45646, 105.252345242),
-                                            zoom: 15))),
-                              ),
-                              Gap(20.h),
-                              Text(
-                                'Descriptions',
-                                style: AppTypography.headline2
-                                    .copyWith(fontWeight: FontWeight.w700),
-                              ),
-                              Gap(10.h),
-                              _descriptionDetail(
-                                  AppImage.parking,
-                                  hike.isParkingRouter!
-                                      ? 'Available '
-                                      : 'Unavailable'),
-                              Gap(10.h),
-                              _descriptionDetail(
-                                  AppImage.difficulty,
-                                  hike.levelDifficultRouter == 1
-                                      ? 'Easy'
-                                      : hike.levelDifficultRouter == 2
-                                          ? 'Normal'
-                                          : 'Difficulty'),
-                              Gap(10.h),
-                              _descriptionDetail(AppImage.time,
-                                  Util.formatDateTime(hike.startTime!)),
-                              Gap(20.h),
-                              EllipsisText(hike.description!,
-                                  maxLines: 20,
-                                  style: AppTypography.title
-                                      .copyWith(color: AppColor.grayIII))
-                            ]))),
+                                  ],
+                                ),
+                                Gap(20.h),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.w),
+                                  child: SizedBox(
+                                      height: 150.h,
+                                      child: const GoogleMap(
+                                          myLocationButtonEnabled: false,
+                                          initialCameraPosition: CameraPosition(
+                                              target: LatLng(
+                                                  15.45646, 105.252345242),
+                                              zoom: 15))),
+                                ),
+                                Gap(20.h),
+                                Text(
+                                  'Descriptions',
+                                  style: AppTypography.headline2
+                                      .copyWith(fontWeight: FontWeight.w700),
+                                ),
+                                Gap(10.h),
+                                _descriptionDetail(
+                                    AppImage.parking,
+                                    hike.isParkingRouter
+                                        ? 'Available '
+                                        : 'Unavailable'),
+                                Gap(10.h),
+                                _descriptionDetail(
+                                    AppImage.difficulty,
+                                    hike.levelDifficultRouter == 1
+                                        ? 'Easy'
+                                        : hike.levelDifficultRouter == 2
+                                            ? 'Normal'
+                                            : 'Difficulty'),
+                                Gap(10.h),
+                                _descriptionDetail(AppImage.time,
+                                    Util.formatDateTime(hike.startTime)),
+                                Gap(20.h),
+                                EllipsisText(hike.description,
+                                    maxLines: 20,
+                                    style: AppTypography.title
+                                        .copyWith(color: AppColor.grayIII)),
+                                Gap(20.h),
+                                Text(
+                                  'Images',
+                                  style: AppTypography.headline2
+                                      .copyWith(fontWeight: FontWeight.w700),
+                                ),
+                                GridView.builder(
+                                    itemCount: hike.images?.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3),
+                                    itemBuilder: (context, index) => Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5.w, vertical: 5.h),
+                                        child: Image.memory(
+                                            Uint8List.fromList(
+                                                hike.images?[index].image ??
+                                                    []),
+                                            fit: BoxFit.contain)))
+                              ]),
+                        ))),
                 Positioned(
                   top: 1,
                   left: 10,

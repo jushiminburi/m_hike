@@ -1,11 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:m_hike/common/extension/string.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:m_hike/common/utils.dart';
+import 'package:m_hike/domain/models/image.dart';
 
 part 'create_update_form_event.dart';
 part 'create_update_form_state.dart';
@@ -21,12 +24,12 @@ class CreateUpdateFormBloc
           nameHike: event.nameHike ?? '',
           locationHike: event.locationHike ?? '',
           startDate: event.startDate,
-          isParking: event.isParking,
+          isParking: event.isParking ?? false,
           distanceHike: event.distanceHike ?? 0,
           levelDifficult: event.levelDifficult ?? 1,
           description: event.description ?? '',
           estimateCompleteTime: event.estimateCompleteTime ?? 0,
-          imagesPath: event.imagesPath ?? <List<int>>[],
+          imagesPath: event.imagesPath ?? <ImageLocal>[],
           startLocation: event.startLocation ?? ''));
     });
 
@@ -58,16 +61,16 @@ class CreateUpdateFormBloc
             return;
           }
           final Uint8List imagesPath = await image.readAsBytes();
-          List<List<int>> imageCopyWith = [];
-          imageCopyWith.add(imagesPath.toList());
+          List<ImageLocal> imageCopyWith = [];
+          imageCopyWith.add(ImageLocal(image: imagesPath.toList()));
           emit(state
               .copyWith(imagesPath: [...state.imagesPath, ...imageCopyWith]));
         } else {
           List<XFile> images = await picker.pickMultiImage();
-          List<List<int>> imagesFormat = [];
+          List<ImageLocal> imagesFormat = [];
           for (final image in images) {
             final listIneImage = await image.readAsBytes();
-            imagesFormat.add(listIneImage.toList());
+            imagesFormat.add(ImageLocal(image: listIneImage.toList()));
           }
           emit(state
               .copyWith(imagesPath: [...state.imagesPath, ...imagesFormat]));
@@ -92,4 +95,36 @@ class CreateUpdateFormBloc
       } else {}
     });
   }
+  Future<Position> _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return Future.error('Location services are disabled.');
+  }
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');
+    }
+  }
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error(
+      'Location permissions are permanently denied, we cannot request permissions.');
+  } 
+  return await Geolocator.getCurrentPosition();
+}
+
+//  void getNearbyPlaces() async {
+
+//     var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude.toString() + ','
+//     + longitude.toString() + '&radius=' + radius + '&key=' + apiKey
+//     );
+
+//     var response = await http.post(url);
+
+//     nearbyPlacesResponse = NearbyPlacesResponse.fromJson(jsonDecode(response.body));
+
+//   }
 }

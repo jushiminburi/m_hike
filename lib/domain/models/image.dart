@@ -7,6 +7,6 @@ part 'image.g.dart';
 
 @freezed
 @Embedded(ignore: {'copyWith'})
-class Image with _$Image {
-  factory Image({List<int>? image}) = _Image;
+class ImageLocal with _$ImageLocal {
+  factory ImageLocal({List<int>? image}) = _ImageLocal;
 }

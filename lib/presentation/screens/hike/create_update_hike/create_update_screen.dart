@@ -29,6 +29,8 @@ class CreateUpdateHikeScreen extends StatefulWidget {
 }
 
 class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
+  Hike? get hike => widget.hike;
+
   late TextEditingController nameTextEditController;
 
   late TextEditingController locationTextEditController;
@@ -42,22 +44,25 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
   late TextEditingController completerTimeTextEditController;
   @override
   void initState() {
-    nameTextEditController =
-        TextEditingController(text: widget.hike?.routerName);
-
+    nameTextEditController = TextEditingController(text: hike?.routerName);
     locationTextEditController =
-        TextEditingController(text: widget.hike?.destinationName);
-
-    startDateTextEditController = TextEditingController(
-        text: Util.formatDateTime(widget.hike?.startTime! ?? DateTime.now()));
-
+        TextEditingController(text: hike?.destinationName);
+    startDateTextEditController =
+        TextEditingController(text: Util.formatDateTime(hike?.startTime));
     distanceTextEditController =
-        TextEditingController(text: widget.hike?.totalDuration.toString());
-
+        TextEditingController(text: hike?.totalDuration.toString());
     descriptionTextEditController =
-        TextEditingController(text: widget.hike?.description);
+        TextEditingController(text: hike?.description);
     completerTimeTextEditController = TextEditingController();
-
+    context.read<CreateUpdateFormBloc>().add(CreateUpdateHikeFormEvent.init(
+        nameHike: hike?.routerName,
+        locationHike: hike?.destinationName,
+        startDate: hike?.startTime,
+        distanceHike: hike?.totalDuration,
+        description: hike?.description,
+        isParking: hike?.isParkingRouter ?? false,
+        levelDifficult: hike?.levelDifficultRouter,
+        imagesPath: hike?.images));
     super.initState();
   }
 
@@ -97,27 +102,18 @@ class _Form extends StatelessWidget {
         super(key: key);
 
   final TextEditingController _nameTextEditController;
-
   final TextEditingController _locationTextEditController;
-
   final TextEditingController _startDateTextEditController;
-
   final TextEditingController _distanceTextEditController;
-
   final TextEditingController _descriptionTextEditController;
-
   final TextEditingController _completerTimeTextEditController;
   final CreateUpdateHikeScreen widget;
   final CreateUpdateHikeFormState state;
 
   FocusNode nameFocusNode = FocusNode();
-
   FocusNode locationFocusNode = FocusNode();
-
   FocusNode completerTimeFocusNode = FocusNode();
-
   FocusNode startDateFocusNode = FocusNode();
-
   FocusNode distanceFocusNode = FocusNode();
 
   DateTime? _selectedDate;
@@ -146,38 +142,39 @@ class _Form extends StatelessWidget {
                                     fontWeight: FontWeight.w700),
                               ),
                               Gap(30.h),
-                              _componentViewField(AppString.name_hike,
-                                  placeholder: AppString.enter_name_of_hike,
-                                  suffix: Padding(
-                                      padding: EdgeInsets.only(right: 10.w),
-                                      child: SvgPicture.asset(
-                                          height: 20.h,
-                                          width: 20.h,
-                                          AppImage.name,
-                                          fit: BoxFit.cover)),
-                                  controller: _nameTextEditController,
-                                  onChanged: (text) => context
-                                      .read<CreateUpdateFormBloc>()
-                                      .add(
-                                          CreateUpdateHikeFormEvent.nameChanged(
-                                              text)),
-                                  focusNode: nameFocusNode),
+                              _componentViewField(
+                                AppString.name_hike,
+                                placeholder: AppString.enter_name_of_hike,
+                                suffix: Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: SvgPicture.asset(
+                                        height: 20.h,
+                                        width: 20.h,
+                                        AppImage.name,
+                                        fit: BoxFit.cover)),
+                                controller: _nameTextEditController,
+                                onChanged: (text) => context
+                                    .read<CreateUpdateFormBloc>()
+                                    .add(CreateUpdateHikeFormEvent.nameChanged(
+                                        text)),
+                              ),
                               Gap(25.h),
-                              _componentViewField(AppString.location_hike,
-                                  controller: _locationTextEditController,
-                                  suffix: Padding(
-                                      padding: EdgeInsets.only(right: 10.w),
-                                      child: SvgPicture.asset(
-                                          height: 20.h,
-                                          width: 20.h,
-                                          AppImage.location,
-                                          fit: BoxFit.cover)),
-                                  placeholder: AppString.enter_location_of_hike,
-                                  onChanged: (text) => context
-                                      .read<CreateUpdateFormBloc>()
-                                      .add(CreateUpdateHikeFormEvent
-                                          .locationChanged(text)),
-                                  focusNode: locationFocusNode),
+                              _componentViewField(
+                                AppString.location_hike,
+                                controller: _locationTextEditController,
+                                suffix: Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: SvgPicture.asset(
+                                        height: 20.h,
+                                        width: 20.h,
+                                        AppImage.location,
+                                        fit: BoxFit.cover)),
+                                placeholder: AppString.enter_location_of_hike,
+                                onChanged: (text) => context
+                                    .read<CreateUpdateFormBloc>()
+                                    .add(CreateUpdateHikeFormEvent
+                                        .locationChanged(text)),
+                              ),
                               Gap(25.h),
                               Row(
                                 mainAxisAlignment:
@@ -226,7 +223,6 @@ class _Form extends StatelessWidget {
                                                     errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20.r), borderSide: const BorderSide(color: AppColor.redI))),
                                                 onTap: () async {
                                                   await _selectDate(context);
-                                                  // ignore: use_build_context_synchronously
                                                 }),
                                             Gap(25.h),
                                             _checkBoxParkingView(
@@ -264,8 +260,6 @@ class _Form extends StatelessWidget {
                                                         TextInputType.number,
                                                     controller:
                                                         _distanceTextEditController,
-                                                    focusNode:
-                                                        distanceFocusNode,
                                                     onChanged: (value) => context
                                                         .read<
                                                             CreateUpdateFormBloc>()
@@ -326,7 +320,8 @@ class _Form extends StatelessWidget {
                                           horizontal: 5.w, vertical: 5.h),
                                       child: Image.memory(
                                           Uint8List.fromList(
-                                              state.imagesPath[index]),
+                                              state.imagesPath[index].image ??
+                                                  []),
                                           fit: BoxFit.contain)))
                             ]))))));
   }
@@ -338,24 +333,21 @@ class _Form extends StatelessWidget {
 
   Widget _checkBoxParkingView(
       BuildContext context, bool isAvailable, bool isUnAvailable) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(AppString.parking_available, style: AppTypography.title),
-        Gap(10.h),
-        GestureDetector(
-            onTap: () => context
-                .read<CreateUpdateFormBloc>()
-                .add(const CreateUpdateHikeFormEvent.isParkingChanged(1)),
-            child: _checkBoxView(isAvailable, AppString.available)),
-        Gap(10.h),
-        GestureDetector(
-            onTap: () => context
-                .read<CreateUpdateFormBloc>()
-                .add(const CreateUpdateHikeFormEvent.isParkingChanged(2)),
-            child: _checkBoxView(isUnAvailable, AppString.unavailable)),
-      ],
-    );
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(AppString.parking_available, style: AppTypography.title),
+      Gap(10.h),
+      GestureDetector(
+          onTap: () => context
+              .read<CreateUpdateFormBloc>()
+              .add(const CreateUpdateHikeFormEvent.isParkingChanged(1)),
+          child: _checkBoxView(isAvailable, AppString.available)),
+      Gap(10.h),
+      GestureDetector(
+          onTap: () => context
+              .read<CreateUpdateFormBloc>()
+              .add(const CreateUpdateHikeFormEvent.isParkingChanged(2)),
+          child: _checkBoxView(isUnAvailable, AppString.unavailable))
+    ]);
   }
 
   Widget _checkBoxView(bool isAvailable, String text) {
@@ -391,16 +383,16 @@ class _Form extends StatelessWidget {
         lastDate: DateTime(2100));
 
     if (newSelectedDate != null) {
+      // ignore: use_build_context_synchronously
+      context
+          .read<CreateUpdateFormBloc>()
+          .add(CreateUpdateHikeFormEvent.startDateChanged(newSelectedDate));
       _selectedDate = newSelectedDate;
       _startDateTextEditController
         ..text = DateFormat.yMMMMd().format(_selectedDate!)
         ..selection = TextSelection.fromPosition(TextPosition(
             offset: _startDateTextEditController.text.length,
             affinity: TextAffinity.downstream));
-      // ignore: use_build_context_synchronously
-      context
-          .read<CreateUpdateFormBloc>()
-          .add(CreateUpdateHikeFormEvent.startDateChanged(_selectedDate!));
     } else {
       _startDateTextEditController.text = '';
     }
@@ -408,7 +400,7 @@ class _Form extends StatelessWidget {
 
   Widget _componentViewField(String title,
       {required TextEditingController controller,
-      required FocusNode focusNode,
+      FocusNode? focusNode,
       Widget? suffix,
       String? placeholder,
       Function(String)? onChanged,
@@ -492,17 +484,32 @@ class _Form extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () => context.router.push(HikeDetailRoute(
-                      hike: Hike(
-                          routerName: state.nameHike,
-                          destinationName: state.locationHike,
-                          created: DateTime.now(),
-                          description: state.description,
-                          levelDifficultRouter: state.levelDifficult,
-                          isParkingRouter: state.isParking,
-                          startTime: state.startDate,
-                          totalDuration: state.distanceHike),
-                      isCreate: true)),
+                  onTap: () {
+                    if (state.isEmptyName) {
+                      Util.showFail('Please enter name of your hike');
+                    } else if (state.isEmptyLocation) {
+                      Util.showFail(
+                          'Please enter destination name for your hike');
+                    } else if (state.isEmptyDistanceHike) {
+                      Util.showFail(
+                          'Please enter total distance for your hike');
+                    } else if (state.isEmptyStartDate) {
+                      Util.showFail('Please choos date for your hike');
+                    } else {
+                      context.router.push(HikeDetailRoute(
+                          hike: Hike(
+                              routerName: state.nameHike,
+                              destinationName: state.locationHike,
+                              created: DateTime.now(),
+                              description: state.description,
+                              levelDifficultRouter: state.levelDifficult,
+                              isParkingRouter: state.isParking,
+                              startTime: state.startDate,
+                              images: state.imagesPath,
+                              totalDuration: state.distanceHike),
+                          isCreate: true));
+                    }
+                  },
                   child: Container(
                       margin: EdgeInsets.symmetric(
                           horizontal: 50.w, vertical: 10.h),

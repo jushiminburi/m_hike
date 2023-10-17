@@ -34,6 +34,8 @@ dependencies:
   path_provider: ^2.1.1
   fluttertoast: ^8.2.2
   isar_flutter_libs: 3.1.0+1
+  json_annotation: ^4.8.1
+  http: any
 
 dev_dependencies:
   freezed: any
@@ -41,6 +43,7 @@ dev_dependencies:
   isar_generator: 3.1.0+1
   auto_route_generator: ^7.3.1
   injectable_generator: ^2.4.0
+  json_serializable: ^6.7.1
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
