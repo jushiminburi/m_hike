@@ -4,7 +4,7 @@ part of 'create_update_form_bloc.dart';
 class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
   const factory CreateUpdateHikeFormEvent.init({
     String? nameHike,
-    String? locationHike,
+    TextEditingController? locationHikeController,
     DateTime? startDate,
     @Default(false) bool? isParking,
     double? distanceHike,
@@ -16,7 +16,9 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
   }) = _Init;
   const factory CreateUpdateHikeFormEvent.nameChanged(String value) =
       _NameChanged;
-  const factory CreateUpdateHikeFormEvent.locationChanged(String value) =
+     const factory CreateUpdateHikeFormEvent.listLocation(String value) =
+      _ListLocation;
+  const factory CreateUpdateHikeFormEvent.locationChanged(SearchPlaces value) =
       _LocationChanged;
   const factory CreateUpdateHikeFormEvent.startDateChanged(DateTime value) =
       _StartDateChanged;

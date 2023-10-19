@@ -53,7 +53,7 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                       )
                     : Image.memory(
                         Uint8List.fromList(hike.images?[0].image ?? []),
-                        fit: BoxFit.fill),
+                        fit: BoxFit.fitWidth),
                 Positioned(
                     bottom: 0,
                     child: Container(

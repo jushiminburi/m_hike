@@ -1,14 +1,19 @@
 import 'dart:typed_data';
 
+import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:m_hike/common/extension/string.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_hike/common/utils.dart';
+import 'package:m_hike/data/remote/maps/place_repository.dart';
+import 'package:m_hike/domain/models/coordinate.dart';
 import 'package:m_hike/domain/models/image.dart';
+import 'package:m_hike/domain/models/maps/search_place.dart';
 
 part 'create_update_form_event.dart';
 part 'create_update_form_state.dart';
@@ -17,12 +22,15 @@ part 'create_update_form_bloc.freezed.dart';
 @injectable
 class CreateUpdateFormBloc
     extends Bloc<CreateUpdateHikeFormEvent, CreateUpdateHikeFormState> {
-  CreateUpdateFormBloc() : super(CreateUpdateHikeFormState()) {
+  CreateUpdateFormBloc(this._placesRepository)
+      : super(CreateUpdateHikeFormState()) {
+    _determinePosition();
     //* Initialize form data
     on<_Init>((event, emit) {
       emit(CreateUpdateHikeFormState(
           nameHike: event.nameHike ?? '',
-          locationHike: event.locationHike ?? '',
+          locationHikeController:
+              event.locationHikeController ?? TextEditingController(text: ''),
           startDate: event.startDate,
           isParking: event.isParking ?? false,
           distanceHike: event.distanceHike ?? 0,
@@ -38,8 +46,24 @@ class CreateUpdateFormBloc
       if (event is _NameChanged) {
         emit(state.copyWith(nameHike: event.value));
       }
+      if (event is _ListLocation) {
+        if (event.value.isNotEmpty) {
+          final result =
+              await _placesRepository.getDataPlacesAutoComplete(event.value);
+          emit(state.copyWith(locationNameSuggest: result));
+        }
+      }
       if (event is _LocationChanged) {
-        emit(state.copyWith(locationHike: event.value));
+        final result =
+            await _placesRepository.getDataPlace(event.value.placeId);
+        emit(state.copyWith(
+            locationHikeController:
+                TextEditingController(text: event.value.description),
+            coordinateDestination: Coordinate(
+                lat: result.geometry.location.lat,
+                lng: result.geometry.location.lng),
+            locationNameSuggest: null));
+        
       }
       if (event is _StartDateChanged) {
         emit(state.copyWith(startDate: event.value));
@@ -96,35 +120,25 @@ class CreateUpdateFormBloc
     });
   }
   Future<Position> _determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    return Future.error('Location services are disabled.');
-  }
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      return Future.error('Location permissions are denied');
+    bool serviceEnabled;
+    LocationPermission permission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
     }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    return await Geolocator.getCurrentPosition();
   }
-  if (permission == LocationPermission.deniedForever) {
-    return Future.error(
-      'Location permissions are permanently denied, we cannot request permissions.');
-  } 
-  return await Geolocator.getCurrentPosition();
-}
 
-//  void getNearbyPlaces() async {
-
-//     var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude.toString() + ','
-//     + longitude.toString() + '&radius=' + radius + '&key=' + apiKey
-//     );
-
-//     var response = await http.post(url);
-
-//     nearbyPlacesResponse = NearbyPlacesResponse.fromJson(jsonDecode(response.body));
-
-//   }
+  final PlacesRepository _placesRepository;
 }

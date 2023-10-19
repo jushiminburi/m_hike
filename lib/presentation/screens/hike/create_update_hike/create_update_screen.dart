@@ -33,8 +33,6 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
 
   late TextEditingController nameTextEditController;
 
-  late TextEditingController locationTextEditController;
-
   late TextEditingController startDateTextEditController;
 
   late TextEditingController distanceTextEditController;
@@ -45,8 +43,6 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
   @override
   void initState() {
     nameTextEditController = TextEditingController(text: hike?.routerName);
-    locationTextEditController =
-        TextEditingController(text: hike?.destinationName);
     startDateTextEditController =
         TextEditingController(text: Util.formatDateTime(hike?.startTime));
     distanceTextEditController =
@@ -56,7 +52,8 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
     completerTimeTextEditController = TextEditingController();
     context.read<CreateUpdateFormBloc>().add(CreateUpdateHikeFormEvent.init(
         nameHike: hike?.routerName,
-        locationHike: hike?.destinationName,
+        locationHikeController:
+            TextEditingController(text: hike?.destinationName ?? ''),
         startDate: hike?.startTime,
         distanceHike: hike?.totalDuration,
         description: hike?.description,
@@ -73,7 +70,6 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
               widget: widget,
               state: state,
               nameTextEditController: nameTextEditController,
-              locationTextEditController: locationTextEditController,
               startDateTextEditController: startDateTextEditController,
               distanceTextEditController: distanceTextEditController,
               descriptionTextEditController: descriptionTextEditController,
@@ -88,13 +84,11 @@ class _Form extends StatelessWidget {
       required this.widget,
       required this.state,
       required TextEditingController nameTextEditController,
-      required TextEditingController locationTextEditController,
       required TextEditingController startDateTextEditController,
       required TextEditingController distanceTextEditController,
       required TextEditingController descriptionTextEditController,
       required TextEditingController completerTimeTextEditController})
       : _nameTextEditController = nameTextEditController,
-        _locationTextEditController = locationTextEditController,
         _startDateTextEditController = startDateTextEditController,
         _distanceTextEditController = distanceTextEditController,
         _descriptionTextEditController = descriptionTextEditController,
@@ -102,7 +96,6 @@ class _Form extends StatelessWidget {
         super(key: key);
 
   final TextEditingController _nameTextEditController;
-  final TextEditingController _locationTextEditController;
   final TextEditingController _startDateTextEditController;
   final TextEditingController _distanceTextEditController;
   final TextEditingController _descriptionTextEditController;
@@ -128,7 +121,7 @@ class _Form extends StatelessWidget {
             child: GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: Column(
@@ -161,7 +154,9 @@ class _Form extends StatelessWidget {
                               Gap(25.h),
                               _componentViewField(
                                 AppString.location_hike,
-                                controller: _locationTextEditController,
+                                controller: state.locationHikeController != null
+                                    ? state.locationHikeController!
+                                    : TextEditingController(),
                                 suffix: Padding(
                                     padding: EdgeInsets.only(right: 10.w),
                                     child: SvgPicture.asset(
@@ -172,103 +167,169 @@ class _Form extends StatelessWidget {
                                 placeholder: AppString.enter_location_of_hike,
                                 onChanged: (text) => context
                                     .read<CreateUpdateFormBloc>()
-                                    .add(CreateUpdateHikeFormEvent
-                                        .locationChanged(text)),
+                                    .add(CreateUpdateHikeFormEvent.listLocation(
+                                        text)),
                               ),
                               Gap(25.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Stack(
                                 children: [
-                                  SizedBox(
-                                      width: 0.35.sw,
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(AppString.startDate_hike,
-                                                style: AppTypography.title
-                                                    .copyWith(
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
-                                            Gap(10.h),
-                                            TextField(
-                                                controller:
-                                                    _startDateTextEditController,
-                                                focusNode:
-                                                    AlwaysDisabledFocusNode(),
-                                                decoration: InputDecoration(
-                                                    hintText: AppString
-                                                        .choose_date_start_hike,
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: 0.35.sw,
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(AppString.startDate_hike,
+                                                    style: AppTypography.title
+                                                        .copyWith(
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)),
+                                                Gap(10.h),
+                                                TextField(
+                                                    controller:
+                                                        _startDateTextEditController,
+                                                    focusNode:
+                                                        AlwaysDisabledFocusNode(),
+                                                    decoration: InputDecoration(
+                                                        hintText: AppString
+                                                            .choose_date_start_hike,
+                                                        contentPadding: EdgeInsets.symmetric(
                                                             horizontal: 10.w,
                                                             vertical: 5.h),
-                                                    enabledBorder: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                20.r),
-                                                        borderSide:
-                                                            const BorderSide(
+                                                        enabledBorder: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    20.r),
+                                                            borderSide: const BorderSide(
                                                                 color: AppColor
                                                                     .grayI)),
-                                                    focusedBorder: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                20.r),
-                                                        borderSide:
-                                                            const BorderSide(color: AppColor.blueI)),
-                                                    errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20.r), borderSide: const BorderSide(color: AppColor.redI))),
-                                                onTap: () async {
-                                                  await _selectDate(context);
-                                                }),
-                                            Gap(25.h),
-                                            _checkBoxParkingView(
-                                                context,
-                                                state.isParking,
-                                                !state.isParking)
-                                          ])),
-                                  Container(
-                                      margin: EdgeInsets.only(right: 40.r),
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(AppString.distance_hike,
-                                                style: AppTypography.title
-                                                    .copyWith(
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
-                                            Gap(10.h),
-                                            SizedBox(
-                                                width: 0.35.sw,
-                                                child: TextFieldView(
-                                                    suffix: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 10.w),
-                                                        child: const Text(
-                                                          '.km',
-                                                          style: TextStyle(
-                                                              color: AppColor
-                                                                  .grayIII),
-                                                        )),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    controller:
-                                                        _distanceTextEditController,
-                                                    onChanged: (value) => context
-                                                        .read<
-                                                            CreateUpdateFormBloc>()
-                                                        .add(CreateUpdateHikeFormEvent
-                                                            .distanceHikeChanged(
-                                                                double.parse(
-                                                                    value))),
-                                                    onSubmitted: (value) {}))
-                                          ])),
+                                                        focusedBorder: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    20.r),
+                                                            borderSide: const BorderSide(
+                                                                color: AppColor.blueI)),
+                                                        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20.r), borderSide: const BorderSide(color: AppColor.redI))),
+                                                    onTap: () async {
+                                                      await _selectDate(
+                                                          context);
+                                                    }),
+                                                Gap(25.h),
+                                                _checkBoxParkingView(
+                                                    context,
+                                                    state.isParking,
+                                                    !state.isParking)
+                                              ])),
+                                      Container(
+                                          margin: EdgeInsets.only(right: 40.r),
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(AppString.distance_hike,
+                                                    style: AppTypography.title
+                                                        .copyWith(
+                                                            fontSize: 16.sp,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600)),
+                                                Gap(10.h),
+                                                SizedBox(
+                                                    width: 0.35.sw,
+                                                    child: TextFieldView(
+                                                        suffix: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    right:
+                                                                        10.w),
+                                                            child: const Text(
+                                                              '.km',
+                                                              style: TextStyle(
+                                                                  color: AppColor
+                                                                      .grayIII),
+                                                            )),
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        controller:
+                                                            _distanceTextEditController,
+                                                        onChanged: (value) => context
+                                                            .read<
+                                                                CreateUpdateFormBloc>()
+                                                            .add(CreateUpdateHikeFormEvent
+                                                                .distanceHikeChanged(
+                                                                    double.parse(
+                                                                        value))),
+                                                        onSubmitted:
+                                                            (value) {}))
+                                              ])),
+                                    ],
+                                  ),
+                                  BlocConsumer<CreateUpdateFormBloc,
+                                      CreateUpdateHikeFormState>(
+                                    builder: (context, state) {
+                                      if (state.locationNameSuggest == null ||
+                                          state.locationNameSuggest!.isEmpty) {
+                                        return const SizedBox();
+                                      } else {
+                                        return Container(
+                                          margin: EdgeInsetsDirectional.only(
+                                              end: 40.w),
+                                          padding: EdgeInsetsDirectional.only(
+                                              start: 10.w),
+                                          decoration: BoxDecoration(
+                                              color: AppColor.grayI,
+                                              borderRadius:
+                                                  BorderRadius.circular(18.r)),
+                                          height: 0.3.sh,
+                                          width: 1.sw,
+                                          child: ListView.separated(
+                                            itemCount: state
+                                                .locationNameSuggest!.length,
+                                            itemBuilder: (_, index) {
+                                              return GestureDetector(
+                                                onTap: () {
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                  context
+                                                      .read<
+                                                          CreateUpdateFormBloc>()
+                                                      .add(CreateUpdateHikeFormEvent
+                                                          .locationChanged(state
+                                                                  .locationNameSuggest![
+                                                              index]));
+                                                },
+                                                child: Container(
+                                                    height: 40,
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(state
+                                                        .locationNameSuggest![
+                                                            index]
+                                                        .description)),
+                                              );
+                                            },
+                                            separatorBuilder:
+                                                (BuildContext context,
+                                                    int index) {
+                                              return const Divider(
+                                                  color: AppColor.grayIII);
+                                            },
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    listener: (BuildContext context,
+                                        CreateUpdateHikeFormState state) {},
+                                  )
                                 ],
                               ),
                               Gap(15.h),
@@ -334,7 +395,9 @@ class _Form extends StatelessWidget {
   Widget _checkBoxParkingView(
       BuildContext context, bool isAvailable, bool isUnAvailable) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(AppString.parking_available, style: AppTypography.title),
+      Text(AppString.parking_available,
+          style: AppTypography.title
+              .copyWith(fontSize: 16.sp, fontWeight: FontWeight.w600)),
       Gap(10.h),
       GestureDetector(
           onTap: () => context
@@ -484,44 +547,49 @@ class _Form extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    if (state.isEmptyName) {
-                      Util.showFail('Please enter name of your hike');
-                    } else if (state.isEmptyLocation) {
-                      Util.showFail(
-                          'Please enter destination name for your hike');
-                    } else if (state.isEmptyDistanceHike) {
-                      Util.showFail(
-                          'Please enter total distance for your hike');
-                    } else if (state.isEmptyStartDate) {
-                      Util.showFail('Please choos date for your hike');
-                    } else {
-                      context.router.push(HikeDetailRoute(
-                          hike: Hike(
-                              routerName: state.nameHike,
-                              destinationName: state.locationHike,
-                              created: DateTime.now(),
-                              description: state.description,
-                              levelDifficultRouter: state.levelDifficult,
-                              isParkingRouter: state.isParking,
-                              startTime: state.startDate,
-                              images: state.imagesPath,
-                              totalDuration: state.distanceHike),
-                          isCreate: true));
-                    }
-                  },
-                  child: Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 50.w, vertical: 10.h),
-                      alignment: Alignment.center,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.r),
-                          color: AppColor.blueIII),
-                      child: Text(AppString.done,
-                          style: AppTypography.headline1
-                              .copyWith(fontSize: 18.sp, color: Colors.white))),
-                )
+                    onTap: () {
+                      if (state.isEmptyName) {
+                        Util.showFail('Please enter name of your hike');
+                      } else if (state.locationHikeController != null &&
+                          state.isEmptyLocation) {
+                        Util.showFail(
+                            'Please enter destination name for your hike');
+                      } else if (state.isEmptyDistanceHike) {
+                        Util.showFail(
+                            'Please enter total distance for your hike');
+                      } else if (state.isEmptyStartDate) {
+                        Util.showFail('Please choos date for your hike');
+                      } else {
+                        context.router.push(HikeDetailRoute(
+                            hike: Hike(
+                                routerName: state.nameHike,
+                                destinationName:
+                                    state.locationHikeController!.text,
+                                created: DateTime.now(),
+                                description: state.description,
+                                levelDifficultRouter: state.levelDifficult,
+                                isParkingRouter: state.isParking,
+                                startTime: state.startDate,
+                                images: state.imagesPath,
+                                coordinateDestination:
+                                    state.coordinateDestination,
+                                totalDuration: state.distanceHike),
+                            isCreate: true));
+                      }
+                    },
+                    child: Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 50.w, vertical: 10.h),
+                        alignment: Alignment.center,
+                        height: 40.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.r),
+                            color: AppColor.blueIII),
+                        child: Text(AppString.done,
+                            style: AppTypography.headline1.copyWith(
+                                fontSize: 18.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600))))
               ]));
 
   Widget _imageHike(BuildContext context) {
@@ -560,30 +628,24 @@ class _Form extends StatelessWidget {
 
 Future showOptions(BuildContext context) async {
   showCupertinoModalPopup(
-    context: context,
-    builder: (context) => CupertinoActionSheet(
-      actions: [
-        CupertinoActionSheetAction(
-          child: const Text('Photo Gallery'),
-          onPressed: () {
-            Navigator.of(context).pop();
-            context
-                .read<CreateUpdateFormBloc>()
-                .add(const CreateUpdateHikeFormEvent.imagesPathChanged(false));
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: const Text('Camera'),
-          onPressed: () {
-            Navigator.of(context).pop();
-            context
-                .read<CreateUpdateFormBloc>()
-                .add(const CreateUpdateHikeFormEvent.imagesPathChanged(true));
-          },
-        ),
-      ],
-    ),
-  );
+      context: context,
+      builder: (context) => CupertinoActionSheet(actions: [
+            CupertinoActionSheetAction(
+              child: const Text('Photo Gallery'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.read<CreateUpdateFormBloc>().add(
+                    const CreateUpdateHikeFormEvent.imagesPathChanged(false));
+              },
+            ),
+            CupertinoActionSheetAction(
+                child: const Text('Camera'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.read<CreateUpdateFormBloc>().add(
+                      const CreateUpdateHikeFormEvent.imagesPathChanged(true));
+                })
+          ]));
 }
 
 class AlwaysDisabledFocusNode extends FocusNode {

@@ -10,7 +10,8 @@ class Places with _$Places {
   factory Places(
       @JsonKey(name: 'geometry') Geometry geometry,
       @JsonKey(name: 'name') String name,
-      @JsonKey(name: 'vicinity') String vicinity) = _Places;
+      @JsonKey(name: 'formatted_address') String? formatAddress,
+      @JsonKey(name: 'vicinity') String? vicinity) = _Places;
        factory Places.fromJson(Map<String, dynamic> json) =>
       _$PlacesFromJson(json);
 }

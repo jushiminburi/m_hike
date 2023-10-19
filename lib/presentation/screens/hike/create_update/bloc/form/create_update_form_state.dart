@@ -5,7 +5,9 @@ class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
   const CreateUpdateHikeFormState._();
   factory CreateUpdateHikeFormState({
     @Default('') String nameHike,
-    @Default('') String locationHike,
+     TextEditingController? locationHikeController,
+    List<SearchPlaces>? locationNameSuggest,
+    Coordinate? coordinateDestination,
     DateTime? startDate,
     @Default(false) bool isParking,
     @Default(0) double distanceHike,
@@ -17,7 +19,7 @@ class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
   }) = _CreateUpdateHikeFormState;
 
   bool get isEmptyName => nameHike.isEmptyStr;
-  bool get isEmptyLocation => locationHike.isEmptyStr;
+  bool get isEmptyLocation => locationHikeController!.text.isEmptyStr;
   bool get isEmptyStartDate => Util.formatDateTime(startDate).isEmptyStr;
   bool get isEmptyDistanceHike =>
       distanceHike.toString().isEmptyStr || distanceHike.toString() == '0.0';

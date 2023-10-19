@@ -8,7 +8,7 @@ part 'coordinate.g.dart';
 @Embedded(ignore: {'copyWith'})
 class Coordinate with _$Coordinate {
   const factory Coordinate(
-      {@Default(0) double lattitude,
-      @Default(0) double longtitude,
+      {@Default(0) double lat,
+      @Default(0) double lng,
       }) = _Coordinate;
 }

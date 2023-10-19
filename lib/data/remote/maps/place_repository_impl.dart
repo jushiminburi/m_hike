@@ -2,6 +2,8 @@ part of 'place_repository.dart';
 
 const String key = 'AIzaSyA6Uwq_D7KiF-Y8ysM6JBN7kw6mfbcsoVg';
 
+
+@LazySingleton(as: PlacesRepository)
 class PlacesRepositoryImpl implements PlacesRepository {
   @override
   Future<Places> getDataPlace(String id) async {
@@ -32,5 +34,15 @@ class PlacesRepositoryImpl implements PlacesRepository {
     var json = convert.jsonDecode(response.body);
     var jsonResults = json['predictions'] as List;
     return jsonResults.map((place) => SearchPlaces.fromJson(place)).toList();
+  }
+
+  @override
+  Future<List<Places>> getDataNearBySearch(double lat, double lng) async {
+    var url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&radius=10&key=$key');
+    var response = await http.post(url);
+    var json = convert.jsonDecode(response.body);
+    var jsonResults = json['results'] as List;
+    return jsonResults.map((place) => Places.fromJson(place)).toList();
   }
 }
