@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/data/local/hike/hike_repository.dart';
 import 'package:m_hike/data/remote/weather/weather_repository.dart';
+import 'package:m_hike/data/local/hike/hike_repository.dart';
 import 'package:m_hike/domain/models/hike.dart';
 import 'package:get_ip_address/get_ip_address.dart';
 import 'package:m_hike/domain/models/weather.dart';
@@ -19,8 +20,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<_Initial>((event, emit) async {
       final ipv4 = await _getIpAddress();
       final temp = await _weatherRepository.getTempHomePage(ipv4);
-      // final hike = await _hikeRepository.fectchListHike();
+       final latest = await _hikeRepository.fectchLisLatestHike();
+      final soon = await _hikeRepository.fetchListComingSoonHike();
+      final complete = await _hikeRepository.fetchListCompleteHike();
+      emit(state.copyWith(
+          hikes: HomeHikes(
+              latest: latest, comingSoon: soon, completed: complete)));
       emit(state.copyWith(weather: temp, time: Util.getTimeOfDay()));
+    });
+    on<_Search>((event, emit) async {
+      final latest =
+          await _hikeRepository.fectchLisLatestHike(keywords: event.keyword);
+      final soon = await _hikeRepository.fetchListComingSoonHike(
+          keywords: event.keyword);
+      final complete =
+          await _hikeRepository.fetchListCompleteHike(keywords: event.keyword);
+      emit(state.copyWith(
+          hikes: HomeHikes(
+              latest: latest, comingSoon: soon, completed: complete)));
     });
   }
 
@@ -33,6 +50,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       rethrow;
     }
   }
+  
 
   final WeatherRepository _weatherRepository;
   final HikeRepository _hikeRepository;
