@@ -44,7 +44,7 @@ class HikeRepositoryImpl implements HikeRepository {
   }
   
   @override
-  Future<Either<AppError, List<Hike>>> fectchListHike(String keywords) {
+  Future<Either<AppError, List<Hike>>> fectchListHike({String? keywords}) {
     // TODO: implement fectchListHike
     throw UnimplementedError();
   }

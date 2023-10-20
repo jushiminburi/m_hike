@@ -39,4 +39,19 @@ class Util {
         textColor: Colors.white,
         fontSize: 12.sp);
   }
+
+ static String getTimeOfDay() {
+    final currentTime = DateTime.now();
+    final currentHour = currentTime.hour;
+
+    if (currentHour >= 5 && currentHour < 12) {
+      return 'Good morning';
+    } else if (currentHour >= 12 && currentHour < 18) {
+      return 'Good afternoon';
+    } else if (currentHour >= 18 || currentHour < 5) {
+      return 'Good night';
+    } else {
+      return 'Unknown';
+    }
+  }
 }
