@@ -247,26 +247,46 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                     ))
                   ]),
             )
-          : Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: AppColor.blueIII,
-                  borderRadius: BorderRadius.circular(25.r)),
-              height: 50.h,
-              margin: EdgeInsets.symmetric(horizontal: 35.w, vertical: 15.h),
-              child: Text('Start',
-                  style: AppTypography.headline1.copyWith(
-                      color: Colors.white,
-                      fontSize: 30.sp,
-                      fontWeight: FontWeight.w700)));
+          : Padding(
+              padding: EdgeInsets.only(left: 30.w, right: 30.w, bottom: 10.h),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: GestureDetector(
+                          onTap: () => context.router
+                              .navigate(CreateUpdateHikeRoute(hike: hike)),
+                          child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: AppColor.blueIII,
+                                  borderRadius: BorderRadius.circular(25.r)),
+                              height: 50.h,
+                              child: Text('Edit',
+                                  style: AppTypography.headline1.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 22.sp,
+                                      fontWeight: FontWeight.w700))))),
+                  Gap(10.w),
+                  Expanded(
+                    child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: AppColor.blueIII,
+                            borderRadius: BorderRadius.circular(25.r)),
+                        height: 50.h,
+                        child: Text('Start',
+                            style: AppTypography.headline1.copyWith(
+                                color: Colors.white,
+                                fontSize: 22.sp,
+                                fontWeight: FontWeight.w700))),
+                  ),
+                ],
+              ),
+            );
 
   Widget _descriptionDetail(String image, String info) => Row(
         children: [
-          SvgPicture.asset(
-            image,
-            height: 30,
-            fit: BoxFit.fill,
-          ),
+          SvgPicture.asset(image, height: 30, fit: BoxFit.fill),
           Gap(10.h),
           Text(
             info,
