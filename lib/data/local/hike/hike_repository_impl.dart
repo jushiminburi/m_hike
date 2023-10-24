@@ -78,7 +78,7 @@ class HikeRepositoryImpl implements HikeRepository {
           .hikes
           .filter()
           .routerNameContains(keywords, caseSensitive: false)
-          .startTimeLessThan(DateTime.now())
+          .startTimeGreaterThan(DateTime.now())
           .destinationNameContains(keywords, caseSensitive: false)
           .sortByCreated()
           .findAll();
@@ -87,7 +87,7 @@ class HikeRepositoryImpl implements HikeRepository {
           .getDatabase()
           .hikes
           .filter()
-          .startTimeLessThan(DateTime.now())
+          .startTimeGreaterThan(DateTime.now())
           .totalDurationEqualTo(double.parse(keywords))
           .sortByCreated()
           .findAll();

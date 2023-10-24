@@ -1,6 +1,6 @@
 part of 'place_repository.dart';
 
-const String key = 'AIzaSyA6Uwq_D7KiF-Y8ysM6JBN7kw6mfbcsoVg';
+const String key = 'AIzaSyAc6XwF77AYn_1nQVmQr1ed-g9GnozgDbs';
 
 @LazySingleton(as: PlacesRepository)
 class PlacesRepositoryImpl implements PlacesRepository {

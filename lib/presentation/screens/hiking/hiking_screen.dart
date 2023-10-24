@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'views/map_view.dart';
 
@@ -27,8 +28,8 @@ class _HikingScreenState extends State<HikingScreen> {
                   minChildSize: 0.1,
                   maxChildSize: 0.3,
                   builder: (_, scroll) => ClipRRect(
-                        borderRadius: BorderRadiusDirectional.vertical(
-                            top: Radius.circular(30)),
+                        borderRadius:  BorderRadiusDirectional.vertical(
+                            top: Radius.circular(30.r)),
                         child: Container(
                           color: Colors.blueAccent,
                           child: ListView(
