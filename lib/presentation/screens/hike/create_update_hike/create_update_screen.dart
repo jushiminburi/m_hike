@@ -153,6 +153,25 @@ class _Form extends StatelessWidget {
                               ),
                               Gap(25.h),
                               _componentViewField(
+                                'Starting Point',
+                                controller: state.startHikeController != null
+                                    ? state.startHikeController!
+                                    : TextEditingController(),
+                                suffix: Padding(
+                                    padding: EdgeInsets.only(right: 10.w),
+                                    child: SvgPicture.asset(
+                                        height: 20.h,
+                                        width: 20.h,
+                                        AppImage.location,
+                                        fit: BoxFit.cover)),
+                                placeholder: AppString.enter_location_of_hike,
+                                onChanged: (text) => context
+                                    .read<CreateUpdateFormBloc>()
+                                    .add(CreateUpdateHikeFormEvent.listLocation(
+                                        text)),
+                              ),
+                              Gap(25.h),
+                              _componentViewField(
                                 AppString.location_hike,
                                 controller: state.locationHikeController != null
                                     ? state.locationHikeController!

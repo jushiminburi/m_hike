@@ -13,6 +13,7 @@ import 'package:m_hike/data/remote/maps/place_repository.dart';
 import 'package:m_hike/domain/models/coordinate.dart';
 import 'package:m_hike/domain/models/image.dart';
 import 'package:m_hike/domain/models/maps/search_place.dart';
+import 'package:geocoding/geocoding.dart';
 
 part 'create_update_form_event.dart';
 part 'create_update_form_state.dart';
@@ -23,9 +24,17 @@ class CreateUpdateFormBloc
     extends Bloc<CreateUpdateHikeFormEvent, CreateUpdateHikeFormState> {
   CreateUpdateFormBloc(this._placesRepository)
       : super(CreateUpdateHikeFormState()) {
-    _determinePosition();
     //* Initialize form data
-    on<_Init>((event, emit) {
+    on<_Init>((event, emit) async {
+      final position = await _determinePosition();
+      Coordinate coordinateOrigin = const Coordinate();
+      String startingPlace = '';
+      if (event.startLocation == null) {
+        coordinateOrigin =
+            Coordinate(lat: position.latitude, lng: position.longitude);
+
+      }
+
       emit(CreateUpdateHikeFormState(
           nameHike: event.nameHike ?? '',
           locationHikeController:
@@ -62,7 +71,24 @@ class CreateUpdateFormBloc
                 lat: result.geometry.location.lat,
                 lng: result.geometry.location.lng),
             locationNameSuggest: null));
-        
+      }
+      if (event is _ListStartLocation) {
+        if (event.value.isNotEmpty) {
+          final result =
+              await _placesRepository.getDataPlacesAutoComplete(event.value);
+          emit(state.copyWith(locationStartNameSuggest: result));
+        }
+      }
+      if (event is _LocationStartChanged) {
+        final result =
+            await _placesRepository.getDataPlace(event.value.placeId);
+        emit(state.copyWith(
+            locationHikeController:
+                TextEditingController(text: event.value.description),
+            coordinatePlaceOrigin: Coordinate(
+                lat: result.geometry.location.lat,
+                lng: result.geometry.location.lng),
+            locationStartNameSuggest: null));
       }
       if (event is _StartDateChanged) {
         emit(state.copyWith(startDate: event.value));
@@ -137,6 +163,19 @@ class CreateUpdateFormBloc
           'Location permissions are permanently denied, we cannot request permissions.');
     }
     return await Geolocator.getCurrentPosition();
+  }
+   Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+            _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
   }
 
   final PlacesRepository _placesRepository;

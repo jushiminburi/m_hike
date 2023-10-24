@@ -5,9 +5,12 @@ class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
   const CreateUpdateHikeFormState._();
   factory CreateUpdateHikeFormState({
     @Default('') String nameHike,
-     TextEditingController? locationHikeController,
+    TextEditingController? locationHikeController,
+    TextEditingController? startHikeController,
+    List<SearchPlaces>? locationStartNameSuggest,
     List<SearchPlaces>? locationNameSuggest,
     Coordinate? coordinateDestination,
+    Coordinate? coordinatePlaceOrigin,
     DateTime? startDate,
     @Default(false) bool isParking,
     @Default(0) double distanceHike,

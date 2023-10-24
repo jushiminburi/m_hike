@@ -98,20 +98,21 @@ class _HomeScreensState extends State<HomeScreens> {
                     Gap(10.w),
                     Flexible(
                         child: PageView.builder(
-                              controller: _pageController,
-                              itemCount: pageCount,
-                              itemBuilder: (_, i) {
-                                if (i == 0) {
-                                  return _listHikeSearch(state.hikes!.latest);
-                                }
-                                if (i == 1) {
-                                  return _listHikeSearch(
-                                      state.hikes!.comingSoon);
-                                } else {
-                                  return _listHikeSearch(
-                                      state.hikes!.completed);
-                                }
-                              }))
+                            controller: _pageController,
+                            itemCount: pageCount,
+                            itemBuilder: (_, i) {
+                              if (i == 0) {
+                                return _listHikeSearch(
+                                    hikes: state.hikes?.latest);
+                              }
+                              if (i == 1) {
+                                return _listHikeSearch(
+                                    hikes: state.hikes?.comingSoon);
+                              } else {
+                                return _listHikeSearch(
+                                    hikes: state.hikes?.completed);
+                              }
+                            }))
                   ])),
           floatingActionButton: FloatingActionButton.extended(
               backgroundColor: AppColor.blueIII,
@@ -127,10 +128,8 @@ class _HomeScreensState extends State<HomeScreens> {
     });
   }
 
-  
-
-  Widget _listHikeSearch(List<Hike> hikes) {
-    return hikes.isNotEmpty
+  Widget _listHikeSearch({List<Hike>? hikes}) {
+    return hikes != null && hikes.isNotEmpty
         ? ListView.separated(
             physics: const ClampingScrollPhysics(),
             itemBuilder: (_, index) => GestureDetector(

@@ -16,6 +16,10 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
   }) = _Init;
   const factory CreateUpdateHikeFormEvent.nameChanged(String value) =
       _NameChanged;
+       const factory CreateUpdateHikeFormEvent.listStartLocation(String value) =
+      _ListStartLocation;
+  const factory CreateUpdateHikeFormEvent.locationStartChanged(SearchPlaces value) =
+      _LocationStartChanged;
      const factory CreateUpdateHikeFormEvent.listLocation(String value) =
       _ListLocation;
   const factory CreateUpdateHikeFormEvent.locationChanged(SearchPlaces value) =

@@ -15,9 +15,10 @@ class AppBarHomeView extends StatelessWidget implements PreferredSizeWidget {
         child: Padding(
             padding: EdgeInsets.only(left: 10.w, top: 10.h),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const CircleAvatar(
-                backgroundColor: Colors.amberAccent,
-              ),
+              CircleAvatar(
+                  backgroundColor: Colors.amberAccent,
+                  child: Image.network(
+                      'https:${weather?.current.condition.icon}')),
               Gap(10.w),
               Column(
                   mainAxisSize: MainAxisSize.min,
