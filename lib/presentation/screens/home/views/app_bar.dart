@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:m_hike/common/constants.dart/app_typography.dart';
+import 'package:m_hike/domain/models/weather.dart';
 
-class AppBarHomeView extends StatefulWidget implements PreferredSizeWidget {
-  const AppBarHomeView({super.key});
-
-  @override
-  State<AppBarHomeView> createState() => _AppBarHomeViewState();
-
-  @override
-  Size get preferredSize => Size.fromHeight(0.12.sh);
-}
-
-class _AppBarHomeViewState extends State<AppBarHomeView> {
+class AppBarHomeView extends StatelessWidget implements PreferredSizeWidget {
+  const AppBarHomeView({super.key, this.weather, this.time, this.icon});
+  final Weather? weather;
+  final String? time;
+  final String? icon;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,14 +24,17 @@ class _AppBarHomeViewState extends State<AppBarHomeView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Good Morning',
+                      time ?? '',
                       style: AppTypography.headline2,
                     ),
                     Text(
-                      '28 °C',
+                      '${weather?.current.tempC} °C',
                       style: AppTypography.title,
                     ),
                   ])
             ])));
   }
+
+  @override
+  Size get preferredSize => Size.fromHeight(0.12.sh);
 }
