@@ -11,5 +11,5 @@ class Observation with _$Observation {
       {@Default(0) int id,
       @Default('') String name,
       @Default('') String originalName,
-      @Default([]) List<String> images}) = _Observation;
+      @Default([]) List<String> imagesPath}) = _Observation;
 }

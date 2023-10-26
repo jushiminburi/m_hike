@@ -1,6 +1,6 @@
 part of 'place_repository.dart';
 
-const String key = 'AIzaSyAc6XwF77AYn_1nQVmQr1ed-g9GnozgDbs';
+const String key = 'AIzaSyAz-Muztfy4QM5oUs6GR13DPaZ8sxvnVik';
 
 @LazySingleton(as: PlacesRepository)
 class PlacesRepositoryImpl implements PlacesRepository {
@@ -14,7 +14,7 @@ class PlacesRepositoryImpl implements PlacesRepository {
     return Places.fromJson(jsonResult);
   }
 
-  @override
+  @override 
   Future<List<Places>> getDataPlaces(
       double lat, double lng, String placeType) async {
     var url =
@@ -28,7 +28,7 @@ class PlacesRepositoryImpl implements PlacesRepository {
   @override
   Future<List<SearchPlaces>> getDataPlacesAutoComplete(String place) async {
     var url =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$place&types=(cities)&key=$key';
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$place&types=(address)&key=$key';
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     print(json['error_message']);

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,9 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/data/remote/maps/place_repository.dart';
 import 'package:m_hike/domain/models/coordinate.dart';
-import 'package:m_hike/domain/models/image.dart';
+import 'package:path/path.dart' as p;
 import 'package:m_hike/domain/models/maps/search_place.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'create_update_form_event.dart';
 part 'create_update_form_state.dart';
@@ -29,24 +28,27 @@ class CreateUpdateFormBloc
       final position = await _determinePosition();
       Coordinate coordinateOrigin = const Coordinate();
       String startingPlace = '';
-      if (event.startLocation == null) {
+      if (event.startHikeController?.text == null) {
         coordinateOrigin =
             Coordinate(lat: position.latitude, lng: position.longitude);
-
+        startingPlace = await _getAddressFromLatLng(position);
       }
 
       emit(CreateUpdateHikeFormState(
-          nameHike: event.nameHike ?? '',
-          locationHikeController:
-              event.locationHikeController ?? TextEditingController(text: ''),
-          startDate: event.startDate,
-          isParking: event.isParking ?? false,
-          distanceHike: event.distanceHike ?? 0,
-          levelDifficult: event.levelDifficult ?? 1,
-          description: event.description ?? '',
-          estimateCompleteTime: event.estimateCompleteTime ?? 0,
-          imagesPath: event.imagesPath ?? <ImageLocal>[],
-          startLocation: event.startLocation ?? ''));
+        nameHike: event.nameHike ?? '',
+        locationHikeController:
+            event.locationHikeController ?? TextEditingController(text: ''),
+        startHikeController: event.startHikeController ??
+            TextEditingController(text: startingPlace),
+        coordinatePlaceOrigin: coordinateOrigin,
+        startDate: event.startDate,
+        isParking: event.isParking ?? false,
+        distanceHike: event.distanceHike ?? 0,
+        levelDifficult: event.levelDifficult ?? 1,
+        description: event.description ?? '',
+        estimateCompleteTime: event.estimateCompleteTime ?? 0,
+        imagesPath: event.imagesPath ?? <String>[],
+      ));
     });
 
     //* Update fields data with current data
@@ -59,6 +61,8 @@ class CreateUpdateFormBloc
           final result =
               await _placesRepository.getDataPlacesAutoComplete(event.value);
           emit(state.copyWith(locationNameSuggest: result));
+        } else {
+          emit(state.copyWith(locationNameSuggest: null));
         }
       }
       if (event is _LocationChanged) {
@@ -77,13 +81,15 @@ class CreateUpdateFormBloc
           final result =
               await _placesRepository.getDataPlacesAutoComplete(event.value);
           emit(state.copyWith(locationStartNameSuggest: result));
+        } else {
+          emit(state.copyWith(locationStartNameSuggest: null));
         }
       }
       if (event is _LocationStartChanged) {
         final result =
             await _placesRepository.getDataPlace(event.value.placeId);
         emit(state.copyWith(
-            locationHikeController:
+            startHikeController:
                 TextEditingController(text: event.value.description),
             coordinatePlaceOrigin: Coordinate(
                 lat: result.geometry.location.lat,
@@ -109,24 +115,20 @@ class CreateUpdateFormBloc
           if (image == null) {
             return;
           }
-          final Uint8List imagesPath = await image.readAsBytes();
-          List<ImageLocal> imageCopyWith = [];
-          imageCopyWith.add(ImageLocal(image: imagesPath.toList()));
+
+          List<String> imageCopyWith = [];
+          imageCopyWith.add(image.path);
           emit(state
               .copyWith(imagesPath: [...state.imagesPath, ...imageCopyWith]));
         } else {
           List<XFile> images = await picker.pickMultiImage();
-          List<ImageLocal> imagesFormat = [];
+          List<String> imagesFormat = [];
           for (final image in images) {
-            final listIneImage = await image.readAsBytes();
-            imagesFormat.add(ImageLocal(image: listIneImage.toList()));
+            imagesFormat.add(image.path);
           }
           emit(state
               .copyWith(imagesPath: [...state.imagesPath, ...imagesFormat]));
         }
-      }
-      if (event is _StartLocationChanged) {
-        emit(state.copyWith(startLocation: event.value));
       }
       if (event is _DescriptionChanged) {
         emit(state.copyWith(description: event.value));
@@ -164,18 +166,24 @@ class CreateUpdateFormBloc
     }
     return await Geolocator.getCurrentPosition();
   }
-   Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            _currentPosition!.latitude, _currentPosition!.longitude)
+
+  Future<String> _getAddressFromLatLng(Position position) async {
+    String placeName = '';
+    await placemarkFromCoordinates(position.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress =
-            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
-      });
+      placeName =
+          '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}';
     }).catchError((e) {
       debugPrint(e);
     });
+    return placeName;
+  }
+
+  Future<String> saveImagePermanently(String? imagePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final name = p.basename(imagePath!);
+    return '${directory.path}/$name';
   }
 
   final PlacesRepository _placesRepository;

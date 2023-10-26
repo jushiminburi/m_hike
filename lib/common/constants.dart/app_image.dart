@@ -15,6 +15,7 @@ mixin AppImage {
   static const String left_arrow = 'assets/icon/left_arrow.svg';
   static const String difficulty = 'assets/icon/difficulty.svg';
   static const String empty = 'assets/icon/empty.svg';
+  static const String walking = 'assets/icon/walking.svg';
 
   // *images
   static const String default_image = 'assets/images/default.jpg';

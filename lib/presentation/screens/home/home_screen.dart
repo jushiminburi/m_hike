@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,6 @@ import 'package:gap/gap.dart';
 import 'package:m_hike/common/constants.dart/constants.dart';
 import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/domain/models/hike.dart';
-import 'package:m_hike/domain/models/weather.dart';
 import 'package:m_hike/presentation/routes/app_router.dart';
 import 'package:m_hike/presentation/screens/home/bloc/home_bloc.dart';
 import 'package:m_hike/presentation/screens/home/views/app_bar.dart';
@@ -151,14 +150,14 @@ class _HomeScreensState extends State<HomeScreens> {
         child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10.r),
-            child: hike.images != null && hike.images!.isEmpty
+            child: hike.imagesPath != null && hike.imagesPath!.isEmpty
                 ? Image.asset(
                     AppImage.default_image,
                     fit: BoxFit.fill,
                     height: double.infinity,
                     width: 120.w,
                   )
-                : Image.memory(Uint8List.fromList(hike.images!.first.image!)),
+                : Image.file(File(hike.imagesPath!.first)),
           ),
           Gap(10.w),
           Expanded(

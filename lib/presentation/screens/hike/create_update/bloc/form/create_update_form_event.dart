@@ -5,22 +5,22 @@ class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
   const factory CreateUpdateHikeFormEvent.init({
     String? nameHike,
     TextEditingController? locationHikeController,
+    TextEditingController? startHikeController,
     DateTime? startDate,
     @Default(false) bool? isParking,
     double? distanceHike,
     int? levelDifficult,
     String? description,
     int? estimateCompleteTime,
-    List<ImageLocal>? imagesPath,
-    String? startLocation,
+    List<String>? imagesPath,
   }) = _Init;
   const factory CreateUpdateHikeFormEvent.nameChanged(String value) =
       _NameChanged;
-       const factory CreateUpdateHikeFormEvent.listStartLocation(String value) =
+  const factory CreateUpdateHikeFormEvent.listStartLocation(String value) =
       _ListStartLocation;
-  const factory CreateUpdateHikeFormEvent.locationStartChanged(SearchPlaces value) =
-      _LocationStartChanged;
-     const factory CreateUpdateHikeFormEvent.listLocation(String value) =
+  const factory CreateUpdateHikeFormEvent.locationStartChanged(
+      SearchPlaces value) = _LocationStartChanged;
+  const factory CreateUpdateHikeFormEvent.listLocation(String value) =
       _ListLocation;
   const factory CreateUpdateHikeFormEvent.locationChanged(SearchPlaces value) =
       _LocationChanged;

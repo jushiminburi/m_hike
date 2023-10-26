@@ -39,6 +39,7 @@ dependencies:
   get_ip_address: ^0.0.6
   public_ip_address: ^1.1.0+1
   geocoding: ^2.1.1
+  flutter_polyline_points: ^2.0.0
 
 dev_dependencies:
   freezed: any

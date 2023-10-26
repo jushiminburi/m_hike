@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:typed_data';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -44,15 +45,14 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
               width: double.infinity,
               height: double.infinity,
               child: Stack(children: [
-                hike.images == null || hike.images!.isEmpty
+                hike.imagesPath == null || hike.imagesPath!.isEmpty
                     ? Image.asset(
                         AppImage.default_image,
                         height: 0.43.sh,
                         width: double.infinity,
                         fit: BoxFit.fill,
                       )
-                    : Image.memory(
-                        Uint8List.fromList(hike.images?[0].image ?? []),
+                    : Image.file(File(hike.imagesPath![0]),
                         fit: BoxFit.fitWidth),
                 Positioned(
                     bottom: 0,
@@ -66,6 +66,7 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                             borderRadius: BorderRadiusDirectional.vertical(
                                 top: Radius.circular(30.r))),
                         child: SingleChildScrollView(
+                          physics: const ClampingScrollPhysics(),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -126,12 +127,63 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                   borderRadius: BorderRadius.circular(10.w),
                                   child: SizedBox(
                                       height: 150.h,
-                                      child: const GoogleMap(
-                                          myLocationButtonEnabled: false,
-                                          initialCameraPosition: CameraPosition(
-                                              target: LatLng(
-                                                  15.45646, 105.252345242),
-                                              zoom: 15))),
+                                      child: GoogleMap(
+                                        onMapCreated: state.onCreateMap,
+                                        zoomGesturesEnabled: true,
+                                        myLocationButtonEnabled: false,
+                                        initialCameraPosition: CameraPosition(
+                                            target: LatLng(
+                                                hike.coordinatePlaceOfOrigin
+                                                        ?.lat ??
+                                                    0,
+                                                hike.coordinatePlaceOfOrigin
+                                                        ?.lng ??
+                                                    0),
+                                            zoom: getBoundsZoomLevel(
+                                                LatLngBounds(
+                                                    southwest: LatLng(
+                                                        hike.coordinatePlaceOfOrigin
+                                                                ?.lat ??
+                                                            0,
+                                                        hike.coordinatePlaceOfOrigin
+                                                                ?.lng ??
+                                                            0),
+                                                    northeast: LatLng(
+                                                        hike.coordinateDestination
+                                                                ?.lat ??
+                                                            0,
+                                                        hike.coordinateDestination
+                                                                ?.lng ??
+                                                            0)),
+                                                Size(1.sw, 150.h))),
+                                        markers: {
+                                          Marker(
+                                              markerId: const MarkerId(
+                                                  "_startLocation"),
+                                              icon: BitmapDescriptor
+                                                  .defaultMarker,
+                                              position: LatLng(
+                                                  hike.coordinatePlaceOfOrigin
+                                                          ?.lat ??
+                                                      0,
+                                                  hike.coordinatePlaceOfOrigin
+                                                          ?.lng ??
+                                                      0)),
+                                          Marker(
+                                            markerId: const MarkerId(
+                                                "_destionationLocation"),
+                                            icon:
+                                                BitmapDescriptor.defaultMarker,
+                                            position: LatLng(
+                                                hike.coordinateDestination
+                                                        ?.lat ??
+                                                    0,
+                                                hike.coordinateDestination
+                                                        ?.lng ??
+                                                    0),
+                                          )
+                                        },
+                                      )),
                                 ),
                                 Gap(20.h),
                                 Text(
@@ -168,7 +220,7 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                       .copyWith(fontWeight: FontWeight.w700),
                                 ),
                                 GridView.builder(
-                                    itemCount: hike.images?.length,
+                                    itemCount: hike.imagesPath?.length,
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
@@ -178,10 +230,8 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                     itemBuilder: (context, index) => Container(
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 5.w, vertical: 5.h),
-                                        child: Image.memory(
-                                            Uint8List.fromList(
-                                                hike.images?[index].image ??
-                                                    []),
+                                        child: Image.file(
+                                            File(hike.imagesPath![index]),
                                             fit: BoxFit.contain)))
                               ]),
                         ))),
@@ -201,6 +251,37 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                 )
               ])));
     });
+  }
+
+  double getBoundsZoomLevel(LatLngBounds bounds, Size mapDimensions) {
+    var worldDimension = const Size(1024, 1024);
+
+    double latRad(lat) {
+      var sinValue = sin(lat * pi / 180);
+      var radX2 = log((1 + sinValue) / (1 - sinValue)) / 2;
+      return max(min(radX2, pi), -pi) / 2;
+    }
+
+    double zoom(mapPx, worldPx, fraction) {
+      return (log(mapPx / worldPx / fraction) / ln2).floorToDouble();
+    }
+
+    var ne = bounds.northeast;
+    var sw = bounds.southwest;
+
+    var latFraction = (latRad(ne.latitude) - latRad(sw.latitude)) / pi;
+
+    var lngDiff = ne.longitude - sw.longitude;
+    var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+    var latZoom =
+        zoom(mapDimensions.height, worldDimension.height, latFraction);
+    var lngZoom = zoom(mapDimensions.width, worldDimension.width, lngFraction);
+
+    if (latZoom < 0) return lngZoom;
+    if (lngZoom < 0) return latZoom;
+
+    return min(latZoom, lngZoom);
   }
 
   Widget _bottomNavigationBar(BuildContext context, Hike hike, bool isCreate) =>
@@ -230,9 +311,12 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                     Gap(20.w),
                     Expanded(
                         child: GestureDetector(
-                      onTap: () => context
-                          .read<DetailHikeBloc>()
-                          .add(DetailHikeEvent.save(hike)),
+                      onTap: () {
+                        context
+                            .read<DetailHikeBloc>()
+                            .add(DetailHikeEvent.save(hike));
+                        context.router.push(const HomeRoutes());
+                      },
                       child: Container(
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
@@ -268,17 +352,20 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                       fontWeight: FontWeight.w700))))),
                   Gap(10.w),
                   Expanded(
-                    child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: AppColor.blueIII,
-                            borderRadius: BorderRadius.circular(25.r)),
-                        height: 50.h,
-                        child: Text('Start',
-                            style: AppTypography.headline1.copyWith(
-                                color: Colors.white,
-                                fontSize: 22.sp,
-                                fontWeight: FontWeight.w700))),
+                    child: GestureDetector(
+                      onTap: () => context.router.push(HikingRoute(hike: hike)),
+                      child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: AppColor.blueIII,
+                              borderRadius: BorderRadius.circular(25.r)),
+                          height: 50.h,
+                          child: Text('Start',
+                              style: AppTypography.headline1.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.w700))),
+                    ),
                   ),
                 ],
               ),

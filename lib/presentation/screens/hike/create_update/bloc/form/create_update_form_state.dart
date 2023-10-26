@@ -17,12 +17,12 @@ class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
     @Default(1) int levelDifficult,
     @Default('') String description,
     @Default(0) int estimateCompleteTime,
-    @Default([]) List<ImageLocal> imagesPath,
-    @Default('') String startLocation,
+    @Default([]) List<String> imagesPath,
   }) = _CreateUpdateHikeFormState;
 
   bool get isEmptyName => nameHike.isEmptyStr;
   bool get isEmptyLocation => locationHikeController!.text.isEmptyStr;
+  bool get isEmptyStartLocation => startHikeController!.text.isEmptyStr;
   bool get isEmptyStartDate => Util.formatDateTime(startDate).isEmptyStr;
   bool get isEmptyDistanceHike =>
       distanceHike.toString().isEmptyStr || distanceHike.toString() == '0.0';

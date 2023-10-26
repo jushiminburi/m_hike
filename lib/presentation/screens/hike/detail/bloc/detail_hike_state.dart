@@ -1,7 +1,7 @@
-part of'detail_hike_bloc.dart';
+part of 'detail_hike_bloc.dart';
 
-@freezed 
+@freezed
 class DetailHikeState with _$DetailHikeState {
-    const factory DetailHikeState(Hike hike) = _DetailHikeState;
-
+  const factory DetailHikeState(Hike hike,
+      {Function(GoogleMapController)? onCreateMap}) = _DetailHikeState;
 }
