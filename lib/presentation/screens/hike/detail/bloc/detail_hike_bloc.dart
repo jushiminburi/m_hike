@@ -4,9 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/data/local/hike/hike_repository.dart';
-import 'package:m_hike/di/di.dart';
 import 'package:m_hike/domain/models/hike.dart';
-import 'package:m_hike/presentation/routes/app_router.dart';
 
 part 'detail_hike_event.dart';
 part 'detail_hike_state.dart';
@@ -38,8 +36,11 @@ class DetailHikeBloc extends Bloc<DetailHikeEvent, DetailHikeState> {
             initData.coordinatePlaceOfOrigin?.lng ?? 0);
         LatLng latLng_2 = LatLng(initData.coordinateDestination?.lat ?? 0,
             initData.coordinateDestination?.lng ?? 0);
-        LatLngBounds bound =
-            LatLngBounds(southwest: latLng_1, northeast: latLng_2);
+        LatLngBounds bound = LatLngBounds(
+            southwest:
+                (latLng_1.latitude <= latLng_2.latitude) ? latLng_1 : latLng_2,
+            northeast:
+                (latLng_1.latitude <= latLng_2.latitude) ? latLng_2 : latLng_1);
         CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
         controller.animateCamera(u2).then((void v) {
           check(u2, controller);

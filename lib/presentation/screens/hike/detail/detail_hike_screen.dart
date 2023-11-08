@@ -127,63 +127,65 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                   borderRadius: BorderRadius.circular(10.w),
                                   child: SizedBox(
                                       height: 150.h,
-                                      child: GoogleMap(
-                                        onMapCreated: state.onCreateMap,
-                                        zoomGesturesEnabled: true,
-                                        myLocationButtonEnabled: false,
-                                        initialCameraPosition: CameraPosition(
-                                            target: LatLng(
-                                                hike.coordinatePlaceOfOrigin
-                                                        ?.lat ??
-                                                    0,
-                                                hike.coordinatePlaceOfOrigin
-                                                        ?.lng ??
-                                                    0),
-                                            zoom: getBoundsZoomLevel(
-                                                LatLngBounds(
-                                                    southwest: LatLng(
+                                      child: hike.coordinatePlaceOfOrigin !=
+                                              null && hike.coordinateDestination!=null
+                                          ? GoogleMap(
+                                              onMapCreated: state.onCreateMap,
+                                              zoomGesturesEnabled: true,
+                                              myLocationButtonEnabled: false,
+                                              initialCameraPosition: CameraPosition(
+                                                  target: LatLng(
+                                                      hike.coordinatePlaceOfOrigin?.lat ??
+                                                          0,
+                                                      hike.coordinatePlaceOfOrigin?.lng ??
+                                                          0),
+                                                  zoom: getBoundsZoomLevel(
+                                                      LatLngBounds(
+                                                          southwest: (hike.coordinatePlaceOfOrigin!.lat <= hike.coordinateDestination!.lat)
+                                                              ? LatLng(
+                                                                  hike.coordinatePlaceOfOrigin?.lat ??
+                                                                      0,
+                                                                  hike.coordinatePlaceOfOrigin?.lng ??
+                                                                      0)
+                                                              : LatLng(
+                                                                  hike.coordinateDestination?.lat ??
+                                                                      0,
+                                                                  hike.coordinateDestination?.lng ??
+                                                                      0),
+                                                          northeast: (hike.coordinatePlaceOfOrigin!.lat <=
+                                                                  hike.coordinateDestination!.lat)
+                                                              ? LatLng(hike.coordinateDestination?.lat ?? 0, hike.coordinateDestination?.lng ?? 0)
+                                                              : LatLng(hike.coordinatePlaceOfOrigin?.lat ?? 0, hike.coordinatePlaceOfOrigin?.lng ?? 0)),
+                                                      Size(1.sw, 150.h))),
+                                              markers: {
+                                                Marker(
+                                                    markerId: const MarkerId(
+                                                        "_startLocation"),
+                                                    icon: BitmapDescriptor
+                                                        .defaultMarker,
+                                                    position: LatLng(
                                                         hike.coordinatePlaceOfOrigin
                                                                 ?.lat ??
                                                             0,
                                                         hike.coordinatePlaceOfOrigin
-                                                                ?.lng ??
-                                                            0),
-                                                    northeast: LatLng(
-                                                        hike.coordinateDestination
-                                                                ?.lat ??
-                                                            0,
-                                                        hike.coordinateDestination
                                                                 ?.lng ??
                                                             0)),
-                                                Size(1.sw, 150.h))),
-                                        markers: {
-                                          Marker(
-                                              markerId: const MarkerId(
-                                                  "_startLocation"),
-                                              icon: BitmapDescriptor
-                                                  .defaultMarker,
-                                              position: LatLng(
-                                                  hike.coordinatePlaceOfOrigin
-                                                          ?.lat ??
-                                                      0,
-                                                  hike.coordinatePlaceOfOrigin
-                                                          ?.lng ??
-                                                      0)),
-                                          Marker(
-                                            markerId: const MarkerId(
-                                                "_destionationLocation"),
-                                            icon:
-                                                BitmapDescriptor.defaultMarker,
-                                            position: LatLng(
-                                                hike.coordinateDestination
-                                                        ?.lat ??
-                                                    0,
-                                                hike.coordinateDestination
-                                                        ?.lng ??
-                                                    0),
-                                          )
-                                        },
-                                      )),
+                                                Marker(
+                                                  markerId: const MarkerId(
+                                                      "_destionationLocation"),
+                                                  icon: BitmapDescriptor
+                                                      .defaultMarker,
+                                                  position: LatLng(
+                                                      hike.coordinateDestination
+                                                              ?.lat ??
+                                                          0,
+                                                      hike.coordinateDestination
+                                                              ?.lng ??
+                                                          0),
+                                                )
+                                              },
+                                            )
+                                          : const SizedBox()),
                                 ),
                                 Gap(20.h),
                                 Text(
@@ -255,7 +257,6 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
 
   double getBoundsZoomLevel(LatLngBounds bounds, Size mapDimensions) {
     var worldDimension = const Size(1024, 1024);
-
     double latRad(lat) {
       var sinValue = sin(lat * pi / 180);
       var radX2 = log((1 + sinValue) / (1 - sinValue)) / 2;

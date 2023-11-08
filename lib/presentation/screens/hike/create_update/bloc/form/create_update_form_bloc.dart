@@ -35,6 +35,7 @@ class CreateUpdateFormBloc
       }
 
       emit(CreateUpdateHikeFormState(
+        isarId: event.isarId,
         nameHike: event.nameHike ?? '',
         locationHikeController:
             event.locationHikeController ?? TextEditingController(text: ''),

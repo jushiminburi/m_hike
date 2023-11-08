@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:m_hike/common/constants.dart/constants.dart';
-import 'package:m_hike/common/extension/string.dart';
 import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/domain/models/hike.dart';
 import 'package:m_hike/presentation/routes/app_router.dart';
@@ -53,6 +51,7 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
         TextEditingController(text: hike?.description);
     completerTimeTextEditController = TextEditingController();
     context.read<CreateUpdateFormBloc>().add(CreateUpdateHikeFormEvent.init(
+        isarId: hike?.isarId ?? 0,
         nameHike: hike?.routerName,
         locationHikeController:
             TextEditingController(text: hike?.destinationName ?? ''),
@@ -137,7 +136,7 @@ class _Form extends StatelessWidget {
                                     fontWeight: FontWeight.w700),
                               ),
                               Gap(30.h),
-                              _componentViewField(
+                              componentViewField(
                                 AppString.name_hike,
                                 placeholder: AppString.enter_name_of_hike,
                                 suffix: Padding(
@@ -154,7 +153,7 @@ class _Form extends StatelessWidget {
                                         text)),
                               ),
                               Gap(25.h),
-                              _componentViewField(
+                              componentViewField(
                                 'Starting Point',
                                 controller: state.startHikeController != null
                                     ? state.startHikeController!
@@ -177,7 +176,7 @@ class _Form extends StatelessWidget {
                                 children: [
                                   Column(
                                     children: [
-                                      _componentViewField(
+                                      componentViewField(
                                         AppString.location_hike,
                                         controller:
                                             state.locationHikeController != null
@@ -558,31 +557,6 @@ class _Form extends StatelessWidget {
     }
   }
 
-  Widget _componentViewField(String title,
-      {required TextEditingController controller,
-      FocusNode? focusNode,
-      Widget? suffix,
-      String? placeholder,
-      Function(String)? onChanged,
-      Function(String)? onSubmitted}) {
-    return Container(
-      margin: EdgeInsets.only(right: 40.w),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title,
-            style: AppTypography.title
-                .copyWith(fontSize: 16.sp, fontWeight: FontWeight.w600)),
-        Gap(10.h),
-        TextFieldView(
-            suffix: suffix,
-            placeholder: placeholder,
-            controller: controller,
-            focusNode: focusNode,
-            onChanged: onChanged,
-            onSubmitted: onSubmitted)
-      ]),
-    );
-  }
-
   Widget _buttonLevelDifficult(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
@@ -659,6 +633,7 @@ class _Form extends StatelessWidget {
                       } else {
                         context.router.push(HikeDetailRoute(
                             hike: Hike(
+                                isarId: state.isarId,
                                 routerName: state.nameHike,
                                 destinationName:
                                     state.locationHikeController!.text,
@@ -750,4 +725,29 @@ Future showOptions(BuildContext context) async {
 class AlwaysDisabledFocusNode extends FocusNode {
   @override
   bool get hasFocus => false;
+}
+
+Widget componentViewField(String title,
+    {required TextEditingController controller,
+    FocusNode? focusNode,
+    Widget? suffix,
+    String? placeholder,
+    Function(String)? onChanged,
+    Function(String)? onSubmitted}) {
+  return Container(
+    margin: EdgeInsets.only(right: 40.w),
+    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(title,
+          style: AppTypography.title
+              .copyWith(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+      Gap(10.h),
+      TextFieldView(
+          suffix: suffix,
+          placeholder: placeholder,
+          controller: controller,
+          focusNode: focusNode,
+          onChanged: onChanged,
+          onSubmitted: onSubmitted)
+    ]),
+  );
 }

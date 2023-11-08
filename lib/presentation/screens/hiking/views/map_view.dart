@@ -116,7 +116,7 @@ class _MapViewState extends State<MapView> {
           hike.coordinatePlaceOfOrigin?.lng ?? 0),
       PointLatLng(hike.coordinatePlaceOfOrigin?.lat ?? 0,
           hike.coordinatePlaceOfOrigin?.lng ?? 0),
-      travelMode: TravelMode.walking,
+      travelMode: TravelMode.driving,
     );
     if (result.points.isNotEmpty) {
       for (var point in result.points) {

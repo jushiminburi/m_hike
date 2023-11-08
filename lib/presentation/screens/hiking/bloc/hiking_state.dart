@@ -9,5 +9,6 @@ class HikingState with _$HikingState{
     LatLng? destinationLocation,
     LatLng? originaLocation,
     @Default('0') footStep,
+    
   })= _HikingState;
 }
