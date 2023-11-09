@@ -128,7 +128,8 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                   child: SizedBox(
                                       height: 150.h,
                                       child: hike.coordinatePlaceOfOrigin !=
-                                              null && hike.coordinateDestination!=null
+                                                  null &&
+                                              hike.coordinateDestination != null
                                           ? GoogleMap(
                                               onMapCreated: state.onCreateMap,
                                               zoomGesturesEnabled: true,
@@ -234,7 +235,26 @@ class _HikeDetailScreenState extends State<HikeDetailScreen> {
                                             horizontal: 5.w, vertical: 5.h),
                                         child: Image.file(
                                             File(hike.imagesPath![index]),
-                                            fit: BoxFit.contain)))
+                                            fit: BoxFit.contain))),
+                                Gap(20.h),
+                                Text('Observation Points',
+                                    style: AppTypography.headline2
+                                        .copyWith(fontWeight: FontWeight.w700)),
+                                Gap(10.h),
+                                ListView.builder(
+                                    // itemCount:
+                                    //     state.hike.observationPoints.length,
+                                    itemCount: 4,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (_, index) => Container(
+                                          width: 1.sw,
+                                          height: 100.h,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                        ))
                               ]),
                         ))),
                 Positioned(

@@ -62,7 +62,9 @@ class _HomeScreensState extends State<HomeScreens> {
                         placeholder: AppString.placeholer_search,
                         suffix: SvgPicture.asset(AppImage.search),
                         onChanged: (value) {},
-                        onSubmitted: (value) {}),
+                        onSubmitted: (value) => context
+                            .read<HomeBloc>()
+                            .add(HomeEvent.search(value))),
                     Gap(10.h),
                     CustomTabBar(
                         height: 40.h,
@@ -157,7 +159,12 @@ class _HomeScreensState extends State<HomeScreens> {
                     height: double.infinity,
                     width: 120.w,
                   )
-                : Image.file(File(hike.imagesPath!.first)),
+                : Image.file(
+                    File(hike.imagesPath!.first),
+                    fit: BoxFit.fill,
+                    height: double.infinity,
+                    width: 120.w,
+                  ),
           ),
           Gap(10.w),
           Expanded(

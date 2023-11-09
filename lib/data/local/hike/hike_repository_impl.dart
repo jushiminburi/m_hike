@@ -52,8 +52,7 @@ class HikeRepositoryImpl implements HikeRepository {
           .getDatabase()
           .hikes
           .filter()
-          .routerNameContains(keywords, caseSensitive: false)
-          .destinationNameContains(keywords, caseSensitive: false)
+          .routerNameContains(keywords)
           .sortByCreated()
           .findAll();
     } else {

@@ -4,7 +4,7 @@ part of 'create_update_form_bloc.dart';
 class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
   const CreateUpdateHikeFormState._();
   factory CreateUpdateHikeFormState({
-   @Default(0) Id isarId,
+   Id? isarId,
     @Default('') String nameHike,
     TextEditingController? locationHikeController,
     TextEditingController? startHikeController,

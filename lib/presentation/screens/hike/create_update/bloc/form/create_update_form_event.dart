@@ -3,7 +3,7 @@ part of 'create_update_form_bloc.dart';
 @freezed
 class CreateUpdateHikeFormEvent with _$CreateUpdateHikeFormEvent {
   const factory CreateUpdateHikeFormEvent.init({
-   @Default(0) Id isarId,
+    Id? isarId,
     String? nameHike,
     TextEditingController? locationHikeController,
     TextEditingController? startHikeController,

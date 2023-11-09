@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
 import 'package:m_hike/common/local/database.dart';
-import 'package:m_hike/data/remote/maps/place_repository.dart';
 import 'package:m_hike/domain/models/exception/app_error.dart';
 import 'package:m_hike/domain/models/hike.dart';
 import 'package:dartz/dartz.dart';
