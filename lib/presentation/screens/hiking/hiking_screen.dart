@@ -7,7 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:m_hike/common/constants.dart/app_color.dart';
 import 'package:m_hike/common/constants.dart/app_string.dart';
 import 'package:m_hike/common/constants.dart/app_typography.dart';
+import 'package:m_hike/common/extension/string.dart';
+import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/domain/models/hike.dart';
+import 'package:m_hike/domain/models/observation_hike.dart';
 import 'package:m_hike/presentation/screens/hike/hike.dart';
 import 'package:m_hike/presentation/screens/hiking/bloc/bloc/observation_add_bloc.dart';
 
@@ -23,7 +26,8 @@ class HikingScreen extends StatefulWidget {
 
 class _HikingScreenState extends State<HikingScreen> {
   final TextEditingController nameObsTextController = TextEditingController();
-  final TextEditingController timeObsTextController = TextEditingController();
+  final TextEditingController timeObsTextController =
+      TextEditingController(text: DateFormat.yMMMMd().format(DateTime.now()));
   final TextEditingController reviewObsTextController = TextEditingController();
   DateTime? _selectedDate;
   @override
@@ -119,6 +123,42 @@ class _HikingScreenState extends State<HikingScreen> {
                                         .add(ObservationAddEvent.reviewChanged(
                                             value)),
                                   ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (state.nameObservation == null ||
+                                          state.nameObservation!.isEmpty) {
+                                        Util.showFail(
+                                            'Please enter name of your observation');
+                                      } else {
+                                        context.read<ObservationAddBLoc>().add(
+                                            ObservationAddEvent.create(
+                                                Observation(
+                                                    name:
+                                                        state.nameObservation!,
+                                                    time: state.time ??
+                                                        DateTime.now(),
+                                                    review: state.description),
+                                                widget.hike));
+                                      }
+                                    },
+                                    child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 50.w, vertical: 10.h),
+                                        alignment: Alignment.center,
+                                        height: 40.h,
+                                        width: 0.7.sw,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20.r),
+                                            color: AppColor.blueIII),
+                                        child: Text('Save',
+                                            style: AppTypography.headline1
+                                                .copyWith(
+                                                    fontSize: 18.sp,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                  )
                                 ],
                               ),
                             ),

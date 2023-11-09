@@ -10,6 +10,7 @@ class Observation with _$Observation {
   const factory Observation(
       {@Default(0) int id,
       @Default('') String name,
-      @Default('') String originalName,
+      @Default('') String review,
+       DateTime? time,
       @Default([]) List<String> imagesPath}) = _Observation;
 }
