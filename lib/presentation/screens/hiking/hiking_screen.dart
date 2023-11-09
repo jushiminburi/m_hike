@@ -29,12 +29,11 @@ class _HikingScreenState extends State<HikingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Stack(
-            children: [
+        backgroundColor: Colors.white,
+        body: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: Stack(children: [
               MapView(hike: widget.hike),
               BlocBuilder<ObservationAddBLoc, ObservationAddState>(
                   builder: (_, state) => DraggableScrollableSheet(
@@ -42,90 +41,95 @@ class _HikingScreenState extends State<HikingScreen> {
                       minChildSize: 0.1,
                       maxChildSize: 0.3,
                       builder: (_, scroll) => ClipRRect(
-                            borderRadius: BorderRadiusDirectional.vertical(
-                                top: Radius.circular(30.r)),
+                          borderRadius: BorderRadiusDirectional.vertical(
+                              top: Radius.circular(30.r)),
+                          child: GestureDetector(
+                            onTap: () => FocusScope.of(context).unfocus(),
                             child: Container(
-                              padding: EdgeInsets.only(left: 10.w, right: 40.w),
-                              color: Colors.white,
-                              child: ListView(
-                                physics: const ClampingScrollPhysics(),
-                                controller: scroll,
-                                children: [
-                                  componentViewField('Observation Name',
-                                      controller: nameObsTextController,
-                                      placeholder: 'Please name observation...',
-                                      onChanged: (p0) {
-                                    context.read<ObservationAddBLoc>().add(
-                                        ObservationAddEvent.nameChanged(p0));
-                                  }),
-                                  Gap(20.h),
-                                  TextField(
-                                    controller: timeObsTextController,
-                                    focusNode: AlwaysDisabledFocusNode(),
-                                    decoration: InputDecoration(
-                                        hintText:
-                                            AppString.choose_date_start_hike,
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 10.w, vertical: 5.h),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            borderSide: const BorderSide(
-                                                color: AppColor.grayI)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            borderSide: const BorderSide(
-                                                color: AppColor.blueI)),
-                                        errorBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            borderSide: const BorderSide(
-                                                color: AppColor.redI))),
-                                    onTap: () async {
-                                      await _selectDate(context);
-                                    },
-                                  ),
-                                  Gap(20.h),
-                                  Text('Review',
-                                      style: AppTypography.title.copyWith(
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w600)),
-                                  Gap(10.h),
-                                  TextFormField(
-                                    maxLines: 7,
-                                    controller: reviewObsTextController,
-                                    decoration: InputDecoration(
-                                        hintText: 'Enter review about hike',
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 10.w, vertical: 10.h),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            borderSide: const BorderSide(
-                                                color: AppColor.grayI)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            borderSide: const BorderSide(
-                                                color: AppColor.blueI)),
-                                        errorBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            borderSide: const BorderSide(
-                                                color: AppColor.redI))),
-                                    onChanged: (value) => context
-                                        .read<ObservationAddBLoc>()
-                                        .add(ObservationAddEvent.reviewChanged(
-                                            value)),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )))
-            ],
-          )),
-    );
+                                padding:
+                                    EdgeInsets.only(left: 10.w, right: 40.w),
+                                color: Colors.white,
+                                child: ListView(
+                                    physics: const ClampingScrollPhysics(),
+                                    controller: scroll,
+                                    children: [
+                                      componentViewField('Observation Name',
+                                          controller: nameObsTextController,
+                                          placeholder:
+                                              'Please name observation...',
+                                          onChanged: (p0) {
+                                        context.read<ObservationAddBLoc>().add(
+                                            ObservationAddEvent.nameChanged(
+                                                p0));
+                                      }),
+                                      Gap(20.h),
+                                      TextField(
+                                        controller: timeObsTextController,
+                                        focusNode: AlwaysDisabledFocusNode(),
+                                        decoration: InputDecoration(
+                                            hintText: AppString
+                                                .choose_date_start_hike,
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 10.w,
+                                                    vertical: 5.h),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                borderSide: const BorderSide(
+                                                    color: AppColor.grayI)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                borderSide: const BorderSide(
+                                                    color: AppColor.blueI)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                borderSide: const BorderSide(
+                                                    color: AppColor.redI))),
+                                        onTap: () async {
+                                          await _selectDate(context);
+                                        },
+                                      ),
+                                      Gap(20.h),
+                                      Text('Review',
+                                          style: AppTypography.title.copyWith(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w600)),
+                                      Gap(10.h),
+                                      TextFormField(
+                                        maxLines: 7,
+                                        controller: reviewObsTextController,
+                                        decoration: InputDecoration(
+                                            hintText: 'Enter review about hike',
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 10.w,
+                                                    vertical: 10.h),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                borderSide: const BorderSide(
+                                                    color: AppColor.grayI)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                borderSide: const BorderSide(
+                                                    color: AppColor.blueI)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                borderSide: const BorderSide(
+                                                    color: AppColor.redI))),
+                                        onChanged: (value) => context
+                                            .read<ObservationAddBLoc>()
+                                            .add(ObservationAddEvent
+                                                .reviewChanged(value)),
+                                      ),
+                                    ])),
+                          ))))
+            ])));
   }
 
   _selectDate(BuildContext context) async {

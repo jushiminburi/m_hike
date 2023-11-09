@@ -51,7 +51,7 @@ class _CreateUpdateHikeScreenState extends State<CreateUpdateHikeScreen> {
         TextEditingController(text: hike?.description);
     completerTimeTextEditController = TextEditingController();
     context.read<CreateUpdateFormBloc>().add(CreateUpdateHikeFormEvent.init(
-        isarId: hike?.isarId ?? 0,
+        isarId: hike?.isarId,
         nameHike: hike?.routerName,
         locationHikeController:
             TextEditingController(text: hike?.destinationName ?? ''),
@@ -632,22 +632,38 @@ class _Form extends StatelessWidget {
                         Util.showFail('Please choos date for your hike');
                       } else {
                         context.router.push(HikeDetailRoute(
-                            hike: Hike(
-                                isarId: state.isarId,
-                                routerName: state.nameHike,
-                                destinationName:
-                                    state.locationHikeController!.text,
-                                created: DateTime.now(),
-                                description: state.description,
-                                levelDifficultRouter: state.levelDifficult,
-                                isParkingRouter: state.isParking,
-                                startTime: state.startDate,
-                                imagesPath: state.imagesPath,
-                                coordinatePlaceOfOrigin:
-                                    state.coordinatePlaceOrigin,
-                                coordinateDestination:
-                                    state.coordinateDestination,
-                                totalDuration: state.distanceHike),
+                            hike: state.isarId == null
+                                ? Hike(
+                                    routerName: state.nameHike,
+                                    destinationName:
+                                        state.locationHikeController!.text,
+                                    created: DateTime.now(),
+                                    description: state.description,
+                                    levelDifficultRouter: state.levelDifficult,
+                                    isParkingRouter: state.isParking,
+                                    startTime: state.startDate,
+                                    imagesPath: state.imagesPath,
+                                    coordinatePlaceOfOrigin:
+                                        state.coordinatePlaceOrigin,
+                                    coordinateDestination:
+                                        state.coordinateDestination,
+                                    totalDuration: state.distanceHike)
+                                : Hike(
+                                    isarId: state.isarId!,
+                                    routerName: state.nameHike,
+                                    destinationName:
+                                        state.locationHikeController!.text,
+                                    created: DateTime.now(),
+                                    description: state.description,
+                                    levelDifficultRouter: state.levelDifficult,
+                                    isParkingRouter: state.isParking,
+                                    startTime: state.startDate,
+                                    imagesPath: state.imagesPath,
+                                    coordinatePlaceOfOrigin:
+                                        state.coordinatePlaceOrigin,
+                                    coordinateDestination:
+                                        state.coordinateDestination,
+                                    totalDuration: state.distanceHike),
                             isCreate: true));
                       }
                     },

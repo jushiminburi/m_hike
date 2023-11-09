@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:m_hike/common/constants.dart/app_image.dart';
 import 'package:m_hike/data/remote/maps/place_repository.dart';
 import 'package:m_hike/domain/models/hike.dart';
 
@@ -39,7 +38,7 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      mapType: MapType.hybrid,
+      mapType: MapType.terrain,
       initialCameraPosition: CameraPosition(
           target: LatLng(hike.coordinatePlaceOfOrigin?.lat ?? 0,
               hike.coordinatePlaceOfOrigin?.lng ?? 0)),
