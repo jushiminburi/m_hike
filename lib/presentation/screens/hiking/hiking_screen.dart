@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:m_hike/common/constants.dart/app_color.dart';
 import 'package:m_hike/common/constants.dart/app_string.dart';
 import 'package:m_hike/common/constants.dart/app_typography.dart';
-import 'package:m_hike/common/extension/string.dart';
 import 'package:m_hike/common/utils.dart';
 import 'package:m_hike/domain/models/hike.dart';
 import 'package:m_hike/domain/models/observation_hike.dart';

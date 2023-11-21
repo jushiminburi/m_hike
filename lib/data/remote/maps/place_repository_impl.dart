@@ -1,6 +1,6 @@
 part of 'place_repository.dart';
 
-const String key = 'AIzaSyBSrokuI10_er4Y5w8OK5VYWp-rK9e6drI';
+const String key = 'AIzaSyDSxc_Nqguw3Xr_jGAzklzx9VFg_QcaMgo';
 
 @LazySingleton(as: PlacesRepository)
 class PlacesRepositoryImpl implements PlacesRepository {
@@ -31,6 +31,7 @@ class PlacesRepositoryImpl implements PlacesRepository {
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$place&key=$key';
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
+    print(url);
     print(json['error_message']);
     var jsonResults = json['predictions'] as List;
     return jsonResults.map((place) => SearchPlaces.fromJson(place)).toList();

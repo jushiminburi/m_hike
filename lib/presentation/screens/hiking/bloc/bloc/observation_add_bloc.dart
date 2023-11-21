@@ -15,7 +15,6 @@ class ObservationAddBLoc
   ObservationAddBLoc(this._hikeRepository) : super(ObservationAddState()) {
     on<_Create>((event, emit) async {
       List<Observation> obs = [event.obs];
-
       final hike = event.hike.copyWith(
           observationPoints: [...event.hike.observationPoints, ...obs]);
       await _hikeRepository.cacheHikeToLocal(hike);
