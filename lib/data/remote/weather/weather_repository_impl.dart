@@ -11,4 +11,5 @@ class WeatheRepositoryImpl implements WeatherRepository {
 
     return Weather.fromJson(json);
   }
+  
 }
