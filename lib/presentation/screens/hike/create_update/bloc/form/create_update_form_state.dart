@@ -4,20 +4,27 @@ part of 'create_update_form_bloc.dart';
 class CreateUpdateHikeFormState with _$CreateUpdateHikeFormState {
   const CreateUpdateHikeFormState._();
   factory CreateUpdateHikeFormState({
-    String? nameHike,
-    String? locationHike,
+   Id? isarId,
+    @Default('') String nameHike,
+    TextEditingController? locationHikeController,
+    TextEditingController? startHikeController,
+    List<SearchPlaces>? locationStartNameSuggest,
+    List<SearchPlaces>? locationNameSuggest,
+    Coordinate? coordinateDestination,
+    Coordinate? coordinatePlaceOrigin,
     DateTime? startDate,
     @Default(false) bool isParking,
-    double? distanceHike,
+    @Default(0) double distanceHike,
     @Default(1) int levelDifficult,
-    String? description,
-    int? estimateCompleteTime,
-    List<String>? imagesPath,
-    String? startLocation,
+    @Default('') String description,
+    @Default(0) int estimateCompleteTime,
+    @Default([]) List<String> imagesPath,
   }) = _CreateUpdateHikeFormState;
 
   bool get isEmptyName => nameHike.isEmptyStr;
-  bool get isEmptyLocation => locationHike.isEmptyStr;
-  bool get isEmptyStartDate => startDate.toString().isEmptyStr;
-  bool get isEmptyDistanceHike => distanceHike.toString().isEmptyStr;
+  bool get isEmptyLocation => locationHikeController!.text.isEmptyStr;
+  bool get isEmptyStartLocation => startHikeController!.text.isEmptyStr;
+  bool get isEmptyStartDate => Util.formatDateTime(startDate).isEmptyStr;
+  bool get isEmptyDistanceHike =>
+      distanceHike.toString().isEmptyStr || distanceHike.toString() == '0.0';
 }

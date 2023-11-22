@@ -21,4 +21,12 @@ mixin AppString {
   static const String enter_name_of_hike = 'Enter name of the hike...';
   static const String enter_location_of_hike = 'Enter location of the hike...';
   static const String choose_date_start_hike = 'Choose date...';
+  static const String image = 'Images';
+  static const String departureLocation = 'Departure location';
+
+  static const String placeholer_search =
+      'You can enter anything about hike...';
+  static const String latest = 'Latest';
+  static const String comming_soon = 'Comming Soon';
+  static const String completed = 'Completed';
 }

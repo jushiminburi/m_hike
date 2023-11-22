@@ -9,7 +9,7 @@ class TextFieldView extends StatefulWidget {
   const TextFieldView(
       {super.key,
       required this.controller,
-      required this.focusNode,
+       this.focusNode,
       required this.onChanged,
       required this.onSubmitted,
       this.keyboardType = TextInputType.text,
@@ -17,7 +17,7 @@ class TextFieldView extends StatefulWidget {
       this.suffix});
 
   final TextEditingController controller;
-  final FocusNode focusNode;
+  final FocusNode? focusNode;
   final TextInputType keyboardType;
   final Function(String)? onChanged;
   final Function(String)? onSubmitted;
@@ -30,18 +30,18 @@ class TextFieldView extends StatefulWidget {
 
 class _TextFieldViewState extends State<TextFieldView> {
   final ValueNotifier<bool> _myFocusNotifier = ValueNotifier<bool>(false);
-  FocusNode get _focusNode => widget.focusNode;
+  FocusNode? get _focusNode => widget.focusNode;
   TextEditingController get _controller => widget.controller;
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(_onFocusChange);
+    _focusNode?.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
+    _focusNode?.removeListener(_onFocusChange);
+    _focusNode?.dispose();
     _myFocusNotifier.dispose();
     super.dispose();
   }

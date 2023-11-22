@@ -1,5 +1,6 @@
 part of 'hike_repository.dart';
 
+@LazySingleton(as: HikeRepository)
 class HikeRepositoryImpl implements HikeRepository {
   Database db;
   HikeRepositoryImpl(this.db);
@@ -15,7 +16,7 @@ class HikeRepositoryImpl implements HikeRepository {
       if (cached == null) {
         await db.getDatabase().hikes.put(hike);
       } else {
-        await db.getDatabase().hikes.put(hike.copyWith(id: hike.id));
+        await db.getDatabase().hikes.put(hike.copyWith(isarId: hike.isarId));
       }
     });
   }
@@ -40,5 +41,83 @@ class HikeRepositoryImpl implements HikeRepository {
     } else {
       return left(AppError(message: 'Delete hike failed'));
     }
+  }
+
+  @override
+  Future<List<Hike>> fectchLisLatestHike({String keywords = ''}) async {
+    List<Hike> result = [];
+
+    if (double.tryParse(keywords) == null) {
+      result = await db
+          .getDatabase()
+          .hikes
+          .filter()
+          .routerNameContains(keywords)
+          .sortByCreated()
+          .findAll();
+    } else {
+      result = await db
+          .getDatabase()
+          .hikes
+          .filter()
+          .totalDurationEqualTo(double.parse(keywords))
+          .sortByCreated()
+          .findAll();
+    }
+    return result;
+  }
+
+  @override
+  Future<List<Hike>> fetchListComingSoonHike({String keywords = ''}) async {
+    List<Hike> result = [];
+
+    if (double.tryParse(keywords) == null) {
+      result = await db
+          .getDatabase()
+          .hikes
+          .filter()
+          .routerNameContains(keywords, caseSensitive: false)
+          .startTimeGreaterThan(DateTime.now())
+          .destinationNameContains(keywords, caseSensitive: false)
+          .sortByCreated()
+          .findAll();
+    } else {
+      result = await db
+          .getDatabase()
+          .hikes
+          .filter()
+          .startTimeGreaterThan(DateTime.now())
+          .totalDurationEqualTo(double.parse(keywords))
+          .sortByCreated()
+          .findAll();
+    }
+    return result;
+  }
+
+  @override
+  Future<List<Hike>> fetchListCompleteHike({String keywords = ''}) async {
+    List<Hike> result = [];
+
+    if (double.tryParse(keywords) == null) {
+      result = await db
+          .getDatabase()
+          .hikes
+          .filter()
+          .routerNameContains(keywords, caseSensitive: false)
+          .completedEqualTo(true)
+          .destinationNameContains(keywords, caseSensitive: false)
+          .sortByCreated()
+          .findAll();
+    } else {
+      result = await db
+          .getDatabase()
+          .hikes
+          .filter()
+          .completedEqualTo(true)
+          .totalDurationEqualTo(double.parse(keywords))
+          .sortByCreated()
+          .findAll();
+    }
+    return result;
   }
 }

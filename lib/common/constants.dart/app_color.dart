@@ -4,7 +4,7 @@ mixin AppColor {
   //* gray color
   static const Color grayI = Color(0xffD1D1D1);
   static const Color grayII = Color(0xfff5f5f5);
-  static const Color grayIII = Color(0xffa7a7a7);
+  static const Color grayIII = Color(0xff71717A);
 
   //* red color
   static const Color redI = Color(0xffF2564B);
