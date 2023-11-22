@@ -18,7 +18,7 @@ class Application extends StatelessWidget {
             title: AppString.title_app,
             debugShowCheckedModeBanner: false,
             routeInformationParser: _autoRouter.defaultRouteParser(),
-            routerDelegate: _autoRouter.delegate(),
+            routerDelegate: _autoRouter.delegate()
           );
         });
   }
