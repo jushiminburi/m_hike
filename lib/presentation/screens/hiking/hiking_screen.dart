@@ -49,8 +49,6 @@ class _HikingScreenState extends State<HikingScreen> {
                           child: GestureDetector(
                             onTap: () => FocusScope.of(context).unfocus(),
                             child: Container(
-
-
                                 padding:
                                     EdgeInsets.only(left: 10.w, right: 40.w),
                                 color: Colors.white,
